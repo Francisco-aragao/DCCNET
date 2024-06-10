@@ -53,12 +53,12 @@ def initParser() -> argparse.ArgumentParser:
     )
 
 
-    """ parser.add_argument(
+    parser.add_argument(
         "gas",
         metavar="GAS",
         type=str,
-        help="Group Authentication Sequence. The client will use this sequence to authenticate with the game servers",
-    ) """
+        help="Group Authentication Sequence. The client will use this sequence to authenticate with the server",
+    )
 
     return parser
 
@@ -116,6 +116,30 @@ def initConnection(host: str, port: int) -> socket.socket:
         exit(1)
 
     return sock
+
+def sendAuthRequest(sock, gas):
+
+    # COMO AUTENTICAR ??
+
+    for idx in range(0, MIN_RETRANSMISSIONS_RETRIES):
+        if (idx == MIN_RETRANSMISSIONS_RETRIES-1):
+            sock.close()
+            raise Exception('Too many attempts, conection closed')
+
+        try:
+            sock.sendall(json.dumps(gas + '\n').encode("ascii"))
+            
+            response = sock.recv(120)
+
+
+
+            print(response)
+            
+            loop_until_receive_response = 0
+
+        except socket.timeout:
+            raise Exception('Too many attempts, conection closed')
+
 
 
 def sendPayload(
@@ -202,65 +226,6 @@ def sendPayload(
     return dict()
 
 
-def sendMultiPayload(
-    sockets: list[socket.socket],
-    payloads: list[dict[str, Any]],
-) -> list[dict[str, Any]]:
-    """
-    Send multiple payloads to multiple sockets in parallel.
-
-    This function spawns `len(sockets)` processes.
-
-    Lists `sockets` and `payloads` MUST have the same size.
-
-    Automatically handles packet drops when sending or receiving.
-
-    If there is no response from the server after `MAX_ATTEMPTS`, nothing will be returned.
-
-    There is a special case for requests of type `getturn`:
-        - Only the first bridge data is returned.
-        - If the first bridge is not present in the received data, a retransmission is made.
-        - All other bridges are ignored, whether they were received or not.
-
-    Parameters
-    ----------
-    `sockets`: List of sockets with valid connections.
-    `payloads`: List of payloads as json formatted dicts to send to each socket. First payload is sent to first socket and so on
-
-    Returns
-    -------
-    `results`: A list of json formatted dicts with the response data from each server.
-    """
-
-    results: list[dict[str, Any]] = list()
-
-    with multiprocessing.Pool() as pool:
-        results = pool.starmap(sendPayload, zip(sockets, payloads))
-
-    return results
-
-
-def sendAuthenticationRequest(
-    sockets: list[socket.socket], gas: str
-) -> list[dict[str, Any]]:
-    """
-    Send an authentication request to *each* game server.
-
-    Parameters
-    ----------
-    `sockets`: List of game server sockets.
-    `gas`: Group Authentication Sequence.
-
-    Returns
-    -------
-    `results`: A list of dicts with the response data from each server.
-    """
-
-    payload: dict[str, Any] = {"type": "authreq", "auth": gas}
-
-    return sendMultiPayload(sockets, repeat(payload, len(sockets)))
-
-
 
 
 if __name__ == "__main__":
@@ -285,17 +250,15 @@ if __name__ == "__main__":
 
     sock = initConnection(host, port)
 
-    raise
-
+    
     # Step 1: Begin authentication
-    res = sendAuthenticationRequest(sockets, args.gas)
+    res = sendAuthRequest(sock, args.gas)
+
+    sock.close()
+
+    raise
 
     for r in res:
         if r["status"] != 0:
             logging.error(f"Authentication failed with a server. Aborted")
             exit(1)
-
-   
-
-    for sock in sockets:
-        sock.close()
