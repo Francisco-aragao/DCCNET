@@ -1,3 +1,5 @@
+import binascii
+import hashlib
 import socket
 import json
 import argparse
@@ -5,16 +7,17 @@ import multiprocessing
 import logging
 import copy as cp
 
+import struct
 from typing import Any
 from itertools import repeat
 
 # Len requisition fields (in bits)
 SYNC_LEN = 32
-SYNC_HEX = 0xDCC023c2
-FLAG_ACK_HEX = 0x80
-FLAG_END_HEX = 0x40
-FLAG_RST_HEX = 0x20
-ID_RST_HEX = 0xFFFF
+SYNC_HEX = b'0xDCC023c2'
+FLAG_ACK_HEX = b'0x80'
+FLAG_END_HEX = b'0x40'
+FLAG_RST_HEX = b'0x20'
+ID_RST_HEX = b'0xFFFF'
 CHKSUM_LEN = 16
 LENGHT_LEN = 16 # should be send with big endian
 MAX_PAYLOAD_SIZE = 4096
@@ -82,14 +85,11 @@ def initConnection(host: str, port: int) -> socket.socket:
     `socket`: A socket connected to host:port if successful.
     """
 
-
     sock = None
 
     # This will resolve any hostname, and check for IPv4 and IPv6 addresses
     # The first socket to get a successful connection is returned
     # Note: using SOCK_DGRAM for UDP
-    a = socket.getaddrinfo(host, port, proto=socket.IPPROTO_TCP)
-    print(a)
     for res in socket.getaddrinfo(host, port, proto=socket.IPPROTO_TCP):
         print(res)
         af, socktype, proto, canonname, sa = res
@@ -117,6 +117,40 @@ def initConnection(host: str, port: int) -> socket.socket:
 
     return sock
 
+def calculate_md5_checksum(data):
+
+    md5 = hashlib.md5()
+    md5.update(data)
+    return md5.digest()
+
+'''
+TODO: TEST MD5 CHECKSUM
+RECEIVE DATA FROM THE RESPONSE
+SEND AUTHENTICATION CORRECTLY (FINISH BUILD FRAME REQUEST)
+
+'''
+
+def buildFrameRequest(length, id, flag, data) :
+
+    return
+    return SYNC_HEX + SYNC_HEX + struct.pack('!H', length) + struct.pack('!I', id)
+
+def returnRespondeFormatted(response):
+    sync1 = response[:4]       # First 32 bits (4 bytes)
+    sync2 = response[4:8]      # Second 32 bits (4 bytes)
+    checksum = response[8:10]  # Next 16 bits (2 bytes)
+    len = response[10:12]  # Next 16 bits (2 bytes)
+    id = response[12:14]
+    flags = response[14:15]
+
+    checksum_int = struct.unpack('!H', checksum)[0]
+    len_int = struct.unpack('!H', len)[0]
+    id_int = struct.unpack('!H', id)[0]
+
+    return sync1.hex(), sync2.hex(), checksum_int, len_int, id_int, flags.hex()
+
+
+
 def sendAuthRequest(sock, gas):
 
     # COMO AUTENTICAR ??
@@ -127,14 +161,20 @@ def sendAuthRequest(sock, gas):
             raise Exception('Too many attempts, conection closed')
 
         try:
-            sock.sendall(json.dumps(gas + '\n').encode("ascii"))
+            print('sync ' , buildFrameRequest(None, None, None, None))
+
+            sock.sendall((gas + '\n').encode("ascii"))
             
             response = sock.recv(120)
 
+            #struct.unpack('>', response)
 
+            print(response.hex())
 
-            print(response)
+            print()
+            print(returnRespondeFormatted(response))
             
+            raise
             loop_until_receive_response = 0
 
         except socket.timeout:
