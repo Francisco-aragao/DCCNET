@@ -17,17 +17,22 @@ SYNC_HEX = b'0xDCC023c2'
 FLAG_ACK_HEX = b'0x80'
 FLAG_END_HEX = b'0x40'
 FLAG_RST_HEX = b'0x20'
+FLAG_EMPTY_HEX = b'0x00'
 ID_RST_HEX = b'0xFFFF'
 CHKSUM_LEN = 16
 LENGHT_LEN = 16 # should be send with big endian
 MAX_PAYLOAD_SIZE = 4096
 ID_LEN = 16 #should be send with big endian
 FLAG_LEN = 8
+
 RETRANSMISSION_TIME_SEC = 1
 
 MESSAGE_TERMINATOR = '\n'
 
 MIN_RETRANSMISSIONS_RETRIES = 16
+
+ID_0 = 0
+ID_1 = 1
 
 class DCCNet:
     """
@@ -117,11 +122,11 @@ def initConnection(host: str, port: int) -> socket.socket:
 
     return sock
 
-def calculate_md5_checksum(data):
+def md5Checksum(data) -> str:
 
-    md5 = hashlib.md5()
-    md5.update(data)
-    return md5.digest()
+    checksum = hashlib.md5(data).hexdigest()
+
+    return checksum
 
 '''
 TODO: TEST MD5 CHECKSUM
@@ -130,25 +135,37 @@ SEND AUTHENTICATION CORRECTLY (FINISH BUILD FRAME REQUEST)
 
 '''
 
-def buildFrameRequest(length, id, flag, data) :
+def buildFrameRequest(id, flag, data) :
 
-    return
-    return SYNC_HEX + SYNC_HEX + struct.pack('!H', length) + struct.pack('!I', id)
+    length = len(data)
+
+    data = data.encode('ascii')
+    
+    print("Data ", data)
+    
+    checksum_bin = md5Checksum(data).encode('ascii')
+
+    print("Checksum ", checksum_bin)
+
+    idBigEndian = struct.pack('>H', id)
+
+    return SYNC_HEX + SYNC_HEX + checksum_bin + struct.pack('!H', length) + idBigEndian + flag + data
 
 def returnRespondeFormatted(response):
     sync1 = response[:4]       # First 32 bits (4 bytes)
     sync2 = response[4:8]      # Second 32 bits (4 bytes)
     checksum = response[8:10]  # Next 16 bits (2 bytes)
     len = response[10:12]  # Next 16 bits (2 bytes)
-    id = response[12:14]
-    flags = response[14:15]
+    id = response[12:14] # Next 16 bits (2 bytes)
+    flags = response[14:15] # Next 8 bits (1 byte)
 
     checksum_int = struct.unpack('!H', checksum)[0]
-    len_int = struct.unpack('!H', len)[0]
+    len_int = struct.unpack('>H', len)[0]
     id_int = struct.unpack('!H', id)[0]
 
-    return sync1.hex(), sync2.hex(), checksum_int, len_int, id_int, flags.hex()
+    data = response[15:15+len_int] # remaining bytes, from 15 to 15+len bytes
 
+    return sync1.hex(), sync2.hex(), checksum_int, len_int, id_int, flags.hex(), data
 
 
 def sendAuthRequest(sock, gas):
@@ -161,19 +178,21 @@ def sendAuthRequest(sock, gas):
             raise Exception('Too many attempts, conection closed')
 
         try:
-            print('sync ' , buildFrameRequest(None, None, None, None))
 
-            sock.sendall((gas + '\n').encode("ascii"))
+            frame = buildFrameRequest(ID_0, FLAG_EMPTY_HEX, gas + MESSAGE_TERMINATOR)
+            print("Frame enviado ", frame)
+
+            sock.sendall(frame)
             
-            response = sock.recv(120)
+            response = sock.recv(120) #numero aleatorio, talvez seria melhor receber a mensagme em partes, após receber o len, sei quanto preciso receber de data
 
             #struct.unpack('>', response)
 
-            print(response.hex())
+            print("Response ", response.hex())
 
             print()
-            print(returnRespondeFormatted(response))
-            
+            print("Response formatted ", returnRespondeFormatted(response))
+
             raise
             loop_until_receive_response = 0
 
