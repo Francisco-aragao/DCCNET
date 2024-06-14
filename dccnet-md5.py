@@ -31,8 +31,8 @@ MESSAGE_TERMINATOR = '\n'
 
 MIN_RETRANSMISSIONS_RETRIES = 16
 
-ID_0 = 0
-ID_1 = 1
+ID_0 = 1
+ID_1 = 0
 
 class DCCNet:
     """
@@ -128,6 +128,12 @@ def md5Checksum(data) -> str:
 
     return checksum
 
+def md5Checksum2(data):
+
+    checksum = hashlib.md5(data).digest()
+
+    return checksum
+
 '''
 TODO: TEST MD5 CHECKSUM
 RECEIVE DATA FROM THE RESPONSE
@@ -145,7 +151,7 @@ def buildFrameRequest(id, flag, data) :
     
     checksum_bin = md5Checksum(data).encode('ascii')
 
-    print("Checksum ", checksum_bin)
+    print("Checksum enviado ", checksum_bin)
 
     idBigEndian = struct.pack('>H', id)
 
@@ -163,7 +169,17 @@ def returnRespondeFormatted(response):
     len_int = struct.unpack('>H', len)[0]
     id_int = struct.unpack('!H', id)[0]
 
-    data = response[15:15+len_int] # remaining bytes, from 15 to 15+len bytes
+    print('chcksum original ' , checksum)
+
+    data = response[15:] # remaining bytes, from 15 to 15+len bytes
+    data_with_no_new_line = data[:-1]
+
+    print()
+    print(sync1 + sync2 + b'\x00\x00'+ len + id + flags + data)
+    meuCheckSum =  md5Checksum(sync1 + sync2 + b'\x00\x00' + len + id + flags + data_with_no_new_line)
+    print("Meu calculo de checksum", meuCheckSum)
+    print("Checksum 2 ", md5Checksum2(sync1 + sync2 + b'\x00\x00' + len + id + flags + data_with_no_new_line))
+    print("sum ", sum(sync1 + sync2 + b'\x00\x00' + len + id + flags + data_with_no_new_line) )
 
     return sync1.hex(), sync2.hex(), checksum_int, len_int, id_int, flags.hex(), data
 
@@ -179,7 +195,8 @@ def sendAuthRequest(sock, gas):
 
         try:
 
-            frame = buildFrameRequest(ID_0, FLAG_EMPTY_HEX, gas + MESSAGE_TERMINATOR)
+            #frame = buildFrameRequest(ID_0, FLAG_EMPTY_HEX, gas + MESSAGE_TERMINATOR)
+            frame = buildFrameRequest(ID_0, FLAG_EMPTY_HEX,  MESSAGE_TERMINATOR)
             print("Frame enviado ", frame)
 
             sock.sendall(frame)
@@ -188,10 +205,17 @@ def sendAuthRequest(sock, gas):
 
             #struct.unpack('>', response)
 
+            print('response original ', response)
             print("Response ", response.hex())
 
             print()
-            print("Response formatted ", returnRespondeFormatted(response))
+            sync, sync, checksum, len, id, flag, data = returnRespondeFormatted(response)
+            print("Response formatted ", (sync, sync, checksum, len, id, flag, data))
+
+            print(data)
+
+            print(str(data))
+
 
             raise
             loop_until_receive_response = 0
