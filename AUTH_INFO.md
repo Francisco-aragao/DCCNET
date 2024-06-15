@@ -1,6 +1,6 @@
 ## Server
 
-Host rubick.dcc.ufmg.br IPv4 150.164.213.245 IPv6 
+Host rubick.snes.2advanced.dev IPv4 150.164.213.245 IPv6 
 Port: 51555 - 51556 ... - 51564
 
 ## Individual SAS
