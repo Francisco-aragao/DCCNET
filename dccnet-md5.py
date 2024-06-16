@@ -13,7 +13,7 @@ from itertools import repeat
 
 # Len requisition fields (in bits)
 SYNC_LEN = 32
-SYNC_HEX = b'0xDCC023c2'
+SYNC_HEX = b'0xDCC023C2'
 FLAG_ACK_HEX = b'0x80'
 FLAG_END_HEX = b'0x40'
 FLAG_RST_HEX = b'0x20'
@@ -96,7 +96,6 @@ def initConnection(host: str, port: int) -> socket.socket:
     # The first socket to get a successful connection is returned
     # Note: using SOCK_DGRAM for UDP
     for res in socket.getaddrinfo(host, port, proto=socket.IPPROTO_TCP):
-        print(res)
         af, socktype, proto, canonname, sa = res
 
         try:
@@ -149,21 +148,19 @@ def buildFrameRequest(id, flag, data) :
     
     print("Data ", data)
     
-    checksum_bin = md5Checksum(data).encode('ascii')
+    checksum_bin = md5Checksum2(data)
 
-    print("Checksum enviado ", checksum_bin)
 
-    idBigEndian = struct.pack('>H', id)
+    return bytes.fromhex(SYNC_HEX) + bytes.fromhex(SYNC_HEX) + checksum_bin + struct.pack('!H', length) + struct.pack('>H', id) + flag + data
 
-    return SYNC_HEX + SYNC_HEX + checksum_bin + struct.pack('!H', length) + idBigEndian + flag + data
-
-def returnRespondeFormatted(response):
+def returnResponseFormatted(response):
     sync1 = response[:4]       # First 32 bits (4 bytes)
     sync2 = response[4:8]      # Second 32 bits (4 bytes)
     checksum = response[8:10]  # Next 16 bits (2 bytes)
     len = response[10:12]  # Next 16 bits (2 bytes)
     id = response[12:14] # Next 16 bits (2 bytes)
     flags = response[14:15] # Next 8 bits (1 byte)
+
 
     checksum_int = struct.unpack('!H', checksum)[0]
     len_int = struct.unpack('>H', len)[0]
@@ -174,11 +171,17 @@ def returnRespondeFormatted(response):
     data = response[15:] # remaining bytes, from 15 to 15+len bytes
     data_with_no_new_line = data[:-1]
 
+    print('Data: ', data)
+
+    print("SOMA: ", sum(sync1 + sync2 + b'\x00\x00' + len + id + flags + data))
+
     print()
     print(sync1 + sync2 + b'\x00\x00'+ len + id + flags + data)
-    meuCheckSum =  md5Checksum(sync1 + sync2 + b'\x00\x00' + len + id + flags + data_with_no_new_line)
+    meuCheckSum =  md5Checksum( b'\x00\x00' + len + id + flags + data)
     print("Meu calculo de checksum", meuCheckSum)
-    print("Checksum 2 ", md5Checksum2(sync1 + sync2 + b'\x00\x00' + len + id + flags + data_with_no_new_line))
+    meuCheckSum =  md5Checksum(b'\xdc\xc0#\xc2\xdc\xc0#\xc2\x002\xff\xff AuthenticationTimeoutError authentication timeout\n')
+    print("Meu calculo de checksum", meuCheckSum)
+    print("Checksum 2 ", md5Checksum2(sync1 + sync2 + b'\x00\x00' + len + id + flags + data))
     print("sum ", sum(sync1 + sync2 + b'\x00\x00' + len + id + flags + data_with_no_new_line) )
 
     return sync1.hex(), sync2.hex(), checksum_int, len_int, id_int, flags.hex(), data
@@ -195,13 +198,16 @@ def sendAuthRequest(sock, gas):
 
         try:
 
-            #frame = buildFrameRequest(ID_0, FLAG_EMPTY_HEX, gas + MESSAGE_TERMINATOR)
-            frame = buildFrameRequest(ID_0, FLAG_EMPTY_HEX,  MESSAGE_TERMINATOR)
+            frame = buildFrameRequest(ID_0, FLAG_END_HEX, gas + MESSAGE_TERMINATOR)
+            #frame = buildFrameRequest(ID_0, FLAG_EMPTY_HEX,  MESSAGE_TERMINATOR)
             print("Frame enviado ", frame)
 
             sock.sendall(frame)
+
+            for _ in range (1000):
+                pass
             
-            response = sock.recv(120) #numero aleatorio, talvez seria melhor receber a mensagme em partes, após receber o len, sei quanto preciso receber de data
+            response = sock.recv(150) #numero aleatorio, talvez seria melhor receber a mensagme em partes, após receber o len, sei quanto preciso receber de data
 
             #struct.unpack('>', response)
 
@@ -209,7 +215,7 @@ def sendAuthRequest(sock, gas):
             print("Response ", response.hex())
 
             print()
-            sync, sync, checksum, len, id, flag, data = returnRespondeFormatted(response)
+            sync, sync, checksum, len, id, flag, data = returnResponseFormatted(response)
             print("Response formatted ", (sync, sync, checksum, len, id, flag, data))
 
             print(data)
