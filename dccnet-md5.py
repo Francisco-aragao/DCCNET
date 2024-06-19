@@ -136,7 +136,7 @@ def md5Checksum2(data):
 
     return checksum
 
-def calculate_checksum(data):
+def calculateInternetChecksum(data):
     # Step 1: Convert data into a series of 16-bit integers
     if len(data) % 2 != 0:
         # If the length is odd, pad the data with a zero byte at the end
@@ -172,8 +172,7 @@ def buildFrameRequest(id, flag, data) :
 
     id_bin = struct.pack('>H', id)
     
-    checksum = sum(SYNC_HEX + SYNC_HEX + CHKSUM_EMPTY + length + id_bin + flag + data)
-    checksum = calculate_checksum(SYNC_HEX + SYNC_HEX + CHKSUM_EMPTY + length + id_bin + flag + data)
+    checksum = calculateInternetChecksum(SYNC_HEX + SYNC_HEX + CHKSUM_EMPTY + length + id_bin + flag + data)
     checksum_bin = struct.pack('>H', checksum)
 
     print('\n Frame enviado \n')
@@ -187,7 +186,6 @@ def buildFrameRequest(id, flag, data) :
     print("Data ", data)
     print()
 
-
     return SYNC_HEX + SYNC_HEX + checksum_bin + length + id_bin + flag + data
 
 def returnResponseFormatted(response):
@@ -198,27 +196,16 @@ def returnResponseFormatted(response):
     id = response[12:14] # Next 16 bits (2 bytes)
     flags = response[14:15] # Next 8 bits (1 byte)
 
-
     checksum_int = struct.unpack('!H', checksum)[0]
     len_int = struct.unpack('>H', len)[0]
     id_int = struct.unpack('!H', id)[0]
 
+    print("\nInformações recebidas: ")
     print('chcksum original ' , checksum)
 
     data = response[15:] # remaining bytes, from 15 to 15+len bytes
-    data_with_no_new_line = data[:-1]
 
     print('Data: ', data)
-
-    print("SOMA: ", sum(sync1 + sync2 + b'\x00\x00' + len + id + flags + data))
-    print("SOMA SEM \\N ", sum(sync1 + sync2 + b'\x00\x00' + len + id + flags + data_with_no_new_line) )
-
-    print('MD5 checksum: ', md5Checksum2(sync1 + sync2 + b'\x00\x00' + len + id + flags + data))
-    print('Novo checksum: ',calculate_checksum(sync1 + sync2 + b'\x00\x00' + len + id + flags + data))
-
-    print()
-    print('Response com checksum zerado: ', sync1 + sync2 + b'\x00\x00'+ len + id + flags + data)
-
 
     return sync1.hex(), sync2.hex(), checksum_int, len_int, id_int, flags.hex(), data
 
@@ -236,7 +223,6 @@ def sendAuthRequest(sock, gas):
 
             frame = buildFrameRequest(ID_0, FLAG_END_HEX, gas + MESSAGE_TERMINATOR)
             #frame = buildFrameRequest(ID_0, FLAG_EMPTY_HEX,  MESSAGE_TERMINATOR)
-            print()
             print("Frame enviado ", frame)
 
             sock.sendall(frame)
@@ -249,15 +235,9 @@ def sendAuthRequest(sock, gas):
             #struct.unpack('>', response)
 
             print('response original ', response)
-            print("Response ", response.hex())
 
-            print()
             sync, sync, checksum, len, id, flag, data = returnResponseFormatted(response)
             print("Response formatted ", (sync, sync, checksum, len, id, flag, data))
-
-            print(data)
-
-            print(str(data))
 
             raise
 
