@@ -13,18 +13,18 @@ from typing import Any
 from itertools import repeat
 
 # Len requisition fields (in bits)
-SYNC_LEN = 32
+SYNC_LEN_BYTES = 4
 SYNC_HEX = bytes.fromhex('DCC023C2')
 FLAG_ACK_HEX = b'0x80'
 FLAG_END_HEX = bytes.fromhex('40')
 FLAG_RST_HEX = b'0x20'
-FLAG_EMPTY_HEX = b'0x00'
+FLAG_EMPTY_HEX = bytes.fromhex('00')
 ID_RST_HEX = b'0xFFFF'
-CHKSUM_LEN = 16
-LENGHT_LEN = 16 # should be send with big endian
+CHKSUM_LEN_BYTES = 2
+LENGHT_LEN_BYTES = 2 # should be send with big endian
 MAX_PAYLOAD_SIZE = 4096
-ID_LEN = 16 #should be send with big endian
-FLAG_LEN = 8
+ID_LEN_BYTES = 2 #should be send with big endian
+FLAG_LEN_BYTES = 1
 
 CHKSUM_EMPTY = b'\x00\x00'
 
@@ -33,6 +33,8 @@ RETRANSMISSION_TIME_SEC = 1
 MESSAGE_TERMINATOR = '\n'
 
 MIN_RETRANSMISSIONS_RETRIES = 16
+
+MESSAGE_COMPLETE_AUTHENTICATION = 'authentication complete\n'
 
 ID_0 = 0
 ID_1 = 1
@@ -157,12 +159,6 @@ def calculateInternetChecksum(data):
     
     return checksum
 
-'''
-TODO: TEST MD5 CHECKSUM
-RECEIVE DATA FROM THE RESPONSE
-SEND AUTHENTICATION CORRECTLY (FINISH BUILD FRAME REQUEST)
-
-'''
 
 def buildFrameRequest(id, flag, data) :
 
@@ -188,14 +184,11 @@ def buildFrameRequest(id, flag, data) :
 
     return SYNC_HEX + SYNC_HEX + checksum_bin + length + id_bin + flag + data
 
-def returnResponseFormatted(response):
-    sync1 = response[:4]       # First 32 bits (4 bytes)
-    sync2 = response[4:8]      # Second 32 bits (4 bytes)
-    checksum = response[8:10]  # Next 16 bits (2 bytes)
-    len = response[10:12]  # Next 16 bits (2 bytes)
-    id = response[12:14] # Next 16 bits (2 bytes)
-    flags = response[14:15] # Next 8 bits (1 byte)
+def returnResponseFormatted(sync1, sync2, checksum, len, id, flag):
 
+    if (sync1 != SYNC_HEX or sync2 != SYNC_HEX):
+        raise Exception('Invalid sync bytes')
+    
     checksum_int = struct.unpack('!H', checksum)[0]
     len_int = struct.unpack('>H', len)[0]
     id_int = struct.unpack('!H', id)[0]
@@ -203,16 +196,11 @@ def returnResponseFormatted(response):
     print("\nInformações recebidas: ")
     print('chcksum original ' , checksum)
 
-    data = response[15:] # remaining bytes, from 15 to 15+len bytes
 
-    print('Data: ', data)
-
-    return sync1.hex(), sync2.hex(), checksum_int, len_int, id_int, flags.hex(), data
+    return checksum_int, len_int, id_int, flag.hex()
 
 
 def sendAuthRequest(sock, gas):
-
-    # COMO AUTENTICAR ??
 
     for idx in range(0, MIN_RETRANSMISSIONS_RETRIES):
         if (idx == MIN_RETRANSMISSIONS_RETRIES-1):
@@ -222,7 +210,6 @@ def sendAuthRequest(sock, gas):
         try:
 
             frame = buildFrameRequest(ID_0, FLAG_END_HEX, gas + MESSAGE_TERMINATOR)
-            #frame = buildFrameRequest(ID_0, FLAG_EMPTY_HEX,  MESSAGE_TERMINATOR)
             print("Frame enviado ", frame)
 
             sock.sendall(frame)
@@ -230,21 +217,47 @@ def sendAuthRequest(sock, gas):
             for _ in range (1000):
                 pass
             
-            response = sock.recv(150) #numero aleatorio, talvez seria melhor receber a mensagme em partes, após receber o len, sei quanto preciso receber de data
+            sync1 = sock.recv(SYNC_LEN_BYTES) 
+            sync2 = sock.recv(SYNC_LEN_BYTES) 
+            checksum = sock.recv(CHKSUM_LEN_BYTES)
+            len = sock.recv(LENGHT_LEN_BYTES)
+            id = sock.recv(ID_LEN_BYTES)
+            flag = sock.recv(FLAG_LEN_BYTES)
 
             #struct.unpack('>', response)
+            print(f'Resposta original: sync: {sync1} {sync2}, checksum: {checksum}, len: {len}, id: {id}, flag: {flag}')
 
-            print('response original ', response)
+            checksum_formatted, len_formatted, id_formatted, flag_formatted = returnResponseFormatted(sync1, sync2, checksum, len, id, flag)
 
-            sync, sync, checksum, len, id, flag, data = returnResponseFormatted(response)
-            print("Response formatted ", (sync, sync, checksum, len, id, flag, data))
+            data = sock.recv(len_formatted)
 
-            raise
+
+            if (checksum_formatted != calculateInternetChecksum(sync1 + sync2 + CHKSUM_EMPTY + len + id + flag + data)):
+                raise Exception('Checksum invalid')
+            
+            data_formatted = data.decode('ascii')
+
+            print(f'\nResponse formatted: checksum: {checksum_formatted}, len: {len_formatted}, id: {id_formatted}, flag: {flag_formatted}, data: {data_formatted}')
+            
+            print(flag)
+            print(FLAG_EMPTY_HEX)
+            print(data_formatted)
+            print(MESSAGE_COMPLETE_AUTHENTICATION)
+            if (flag == FLAG_EMPTY_HEX and data_formatted == MESSAGE_COMPLETE_AUTHENTICATION):
+                return True            
 
         except socket.timeout:
             raise Exception('Too many attempts, conection closed')
+        
+    return False
 
 
+'''
+AUTHENTICATION WORKS
+
+TODO: AFTER AUTHENTICATION, RECEIVE INFO AND CALCULATE MD5
+
+'''
 
 def sendPayload(
     sock: socket.socket,
@@ -356,7 +369,13 @@ if __name__ == "__main__":
 
     
     # Step 1: Begin authentication
-    res = sendAuthRequest(sock, args.gas)
+    statusAuth = sendAuthRequest(sock, args.gas)
+
+    if (statusAuth == False):
+        logging.error(f"Authentication failed with a server. Aborted")
+        exit(1)     
+    
+    logging.info(f"Authentication complete with server")
 
     sock.close()
 
