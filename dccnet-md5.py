@@ -16,7 +16,7 @@ from itertools import repeat
 SYNC_LEN = 32
 SYNC_HEX = bytes.fromhex('DCC023C2')
 FLAG_ACK_HEX = b'0x80'
-FLAG_END_HEX = b'0x40'
+FLAG_END_HEX = bytes.fromhex('40')
 FLAG_RST_HEX = b'0x20'
 FLAG_EMPTY_HEX = b'0x00'
 ID_RST_HEX = b'0xFFFF'
@@ -34,8 +34,8 @@ MESSAGE_TERMINATOR = '\n'
 
 MIN_RETRANSMISSIONS_RETRIES = 16
 
-ID_0 = 1
-ID_1 = 0
+ID_0 = 0
+ID_1 = 1
 
 class DCCNet:
     """
@@ -136,6 +136,27 @@ def md5Checksum2(data):
 
     return checksum
 
+def calculate_checksum(data):
+    # Step 1: Convert data into a series of 16-bit integers
+    if len(data) % 2 != 0:
+        # If the length is odd, pad the data with a zero byte at the end
+        data += b'\x00'
+    
+    checksum = 0
+    
+    # Step 2: Calculate the sum of all 16-bit integers
+    for i in range(0, len(data), 2):
+        # Combine two bytes to form a 16-bit integer
+        word = (data[i] << 8) + data[i+1]
+        checksum += word
+        # Handle carry bit wrap around
+        checksum = (checksum & 0xffff) + (checksum >> 16)
+    
+    # Step 3: Take the 1's complement of the final sum
+    checksum = ~checksum & 0xffff
+    
+    return checksum
+
 '''
 TODO: TEST MD5 CHECKSUM
 RECEIVE DATA FROM THE RESPONSE
@@ -152,6 +173,7 @@ def buildFrameRequest(id, flag, data) :
     id_bin = struct.pack('>H', id)
     
     checksum = sum(SYNC_HEX + SYNC_HEX + CHKSUM_EMPTY + length + id_bin + flag + data)
+    checksum = calculate_checksum(SYNC_HEX + SYNC_HEX + CHKSUM_EMPTY + length + id_bin + flag + data)
     checksum_bin = struct.pack('>H', checksum)
 
     print('\n Frame enviado \n')
@@ -191,7 +213,8 @@ def returnResponseFormatted(response):
     print("SOMA: ", sum(sync1 + sync2 + b'\x00\x00' + len + id + flags + data))
     print("SOMA SEM \\N ", sum(sync1 + sync2 + b'\x00\x00' + len + id + flags + data_with_no_new_line) )
 
-    print("SOMA: ", sum(sync1 + sync2 + len + id + flags + data))
+    print('MD5 checksum: ', md5Checksum2(sync1 + sync2 + b'\x00\x00' + len + id + flags + data))
+    print('Novo checksum: ',calculate_checksum(sync1 + sync2 + b'\x00\x00' + len + id + flags + data))
 
     print()
     print('Response com checksum zerado: ', sync1 + sync2 + b'\x00\x00'+ len + id + flags + data)
