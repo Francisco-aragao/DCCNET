@@ -1,5 +1,6 @@
 import binascii
 import hashlib
+from operator import length_hint
 import socket
 import json
 import argparse
@@ -13,7 +14,7 @@ from itertools import repeat
 
 # Len requisition fields (in bits)
 SYNC_LEN = 32
-SYNC_HEX = b'0xDCC023C2'
+SYNC_HEX = bytes.fromhex('DCC023C2')
 FLAG_ACK_HEX = b'0x80'
 FLAG_END_HEX = b'0x40'
 FLAG_RST_HEX = b'0x20'
@@ -24,6 +25,8 @@ LENGHT_LEN = 16 # should be send with big endian
 MAX_PAYLOAD_SIZE = 4096
 ID_LEN = 16 #should be send with big endian
 FLAG_LEN = 8
+
+CHKSUM_EMPTY = b'\x00\x00'
 
 RETRANSMISSION_TIME_SEC = 1
 
@@ -142,16 +145,28 @@ SEND AUTHENTICATION CORRECTLY (FINISH BUILD FRAME REQUEST)
 
 def buildFrameRequest(id, flag, data) :
 
-    length = len(data)
+    length = struct.pack('>H', len(data))
 
-    data = data.encode('ascii')
+    data = data.encode('ascii') 
+
+    id_bin = struct.pack('>H', id)
     
+    checksum = sum(SYNC_HEX + SYNC_HEX + CHKSUM_EMPTY + length + id_bin + flag + data)
+    checksum_bin = struct.pack('>H', checksum)
+
+    print('\n Frame enviado \n')
+    print('SYNC ', SYNC_HEX)
+    print('Checksum ', checksum)
+    print('checksum binario ', checksum_bin)
+    print('length ', length)
+    print('id ', id)
+    print('id bin ', id_bin)
+    print('flag ', flag)
     print("Data ", data)
-    
-    checksum_bin = md5Checksum2(data)
+    print()
 
 
-    return bytes.fromhex(SYNC_HEX) + bytes.fromhex(SYNC_HEX) + checksum_bin + struct.pack('!H', length) + struct.pack('>H', id) + flag + data
+    return SYNC_HEX + SYNC_HEX + checksum_bin + length + id_bin + flag + data
 
 def returnResponseFormatted(response):
     sync1 = response[:4]       # First 32 bits (4 bytes)
@@ -174,15 +189,13 @@ def returnResponseFormatted(response):
     print('Data: ', data)
 
     print("SOMA: ", sum(sync1 + sync2 + b'\x00\x00' + len + id + flags + data))
+    print("SOMA SEM \\N ", sum(sync1 + sync2 + b'\x00\x00' + len + id + flags + data_with_no_new_line) )
+
+    print("SOMA: ", sum(sync1 + sync2 + len + id + flags + data))
 
     print()
-    print(sync1 + sync2 + b'\x00\x00'+ len + id + flags + data)
-    meuCheckSum =  md5Checksum( b'\x00\x00' + len + id + flags + data)
-    print("Meu calculo de checksum", meuCheckSum)
-    meuCheckSum =  md5Checksum(b'\xdc\xc0#\xc2\xdc\xc0#\xc2\x002\xff\xff AuthenticationTimeoutError authentication timeout\n')
-    print("Meu calculo de checksum", meuCheckSum)
-    print("Checksum 2 ", md5Checksum2(sync1 + sync2 + b'\x00\x00' + len + id + flags + data))
-    print("sum ", sum(sync1 + sync2 + b'\x00\x00' + len + id + flags + data_with_no_new_line) )
+    print('Response com checksum zerado: ', sync1 + sync2 + b'\x00\x00'+ len + id + flags + data)
+
 
     return sync1.hex(), sync2.hex(), checksum_int, len_int, id_int, flags.hex(), data
 
@@ -200,6 +213,7 @@ def sendAuthRequest(sock, gas):
 
             frame = buildFrameRequest(ID_0, FLAG_END_HEX, gas + MESSAGE_TERMINATOR)
             #frame = buildFrameRequest(ID_0, FLAG_EMPTY_HEX,  MESSAGE_TERMINATOR)
+            print()
             print("Frame enviado ", frame)
 
             sock.sendall(frame)
@@ -222,9 +236,7 @@ def sendAuthRequest(sock, gas):
 
             print(str(data))
 
-
             raise
-            loop_until_receive_response = 0
 
         except socket.timeout:
             raise Exception('Too many attempts, conection closed')
