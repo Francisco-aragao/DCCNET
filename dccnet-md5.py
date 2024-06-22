@@ -7,47 +7,48 @@ import argparse
 import multiprocessing
 import logging
 import copy as cp
+import time
 
 import struct
 from typing import Any
 from itertools import repeat
 
-# Len requisition fields (in bits)
-SYNC_LEN_BYTES = 4
-SYNC_HEX = bytes.fromhex('DCC023C2')
-FLAG_ACK_HEX = b'0x80'
-FLAG_END_HEX = bytes.fromhex('40')
-FLAG_RST_HEX = b'0x20'
-FLAG_EMPTY_HEX = bytes.fromhex('00')
-ID_RST_HEX = b'0xFFFF'
-CHKSUM_LEN_BYTES = 2
-LENGHT_LEN_BYTES = 2 # should be send with big endian
-MAX_PAYLOAD_SIZE = 4096
-ID_LEN_BYTES = 2 #should be send with big endian
-FLAG_LEN_BYTES = 1
+# DCCNET frame specifications
+SYNC_HEX: bytes = bytes.fromhex('DCC023C2')
 
-CHKSUM_EMPTY = b'\x00\x00'
+FLAG_ACK_HEX: bytes = bytes.fromhex('80')
+FLAG_END_HEX: bytes = bytes.fromhex('40')
+FLAG_RST_HEX: bytes = bytes.fromhex('20')
+FLAG_EMPTY_HEX: bytes = bytes.fromhex('00')
 
-RETRANSMISSION_TIME_SEC = 1
+ID_RST: int = 65535
+CHKSUM_EMPTY_HEX: bytes = bytes.fromhex('0000')
 
-MESSAGE_TERMINATOR = '\n'
+SYNC_LEN_BYTES: int = 4
+CHKSUM_LEN_BYTES: int = 2
+LENGTH_LEN_BYTES: int = 2 # should be sent as big endian
+ID_LEN_BYTES: int = 2 # should be sent as big endian
+FLAG_LEN_BYTES: int = 1
 
-MIN_RETRANSMISSIONS_RETRIES = 16
+MAX_PAYLOAD_SIZE: int = 4096
+HEADER_SIZE: int = SYNC_LEN_BYTES * 2 + CHKSUM_LEN_BYTES + LENGTH_LEN_BYTES + ID_LEN_BYTES + FLAG_LEN_BYTES
+MAX_FRAME_SIZE: int = MAX_PAYLOAD_SIZE + HEADER_SIZE
 
-MESSAGE_COMPLETE_AUTHENTICATION = 'authentication complete\n'
+# SEND/RECEIVE parameters
+RETRANSMISSION_TIME_SEC: int = 1
+MIN_RETRANSMISSIONS_RETRIES: int = 16
+TIMEOUT_SEC: int = 0.5
 
-ID_0 = 0
-ID_1 = 1
+BUF_SIZE: int = MAX_FRAME_SIZE * 2 # Buffering up to 2 frames is enough to find misaligned frames
+RECV_BUFFER: bytes = bytes()
 
-class DCCNet:
-    """
-    DCCNet class
-    """
+# Keep track of the current and last TX/RX ID
+CURR_TRANSMITTED_ID: int = 0
 
-    def __init__(self):
-        self.chksum = 0
-        self.id = 0
+LAST_RECEIVED_ID: int = 0
+LAST_RECEIVED_CHKSUM: bytes = CHKSUM_EMPTY_HEX
 
+MESSAGE_TERMINATOR: bytes = b'\n'
 
 def initParser() -> argparse.ArgumentParser:
     """
@@ -99,7 +100,7 @@ def initConnection(host: str, port: int) -> socket.socket:
 
     # This will resolve any hostname, and check for IPv4 and IPv6 addresses
     # The first socket to get a successful connection is returned
-    # Note: using SOCK_DGRAM for UDP
+    # Note: using TCP protocol for DCCNET
     for res in socket.getaddrinfo(host, port, proto=socket.IPPROTO_TCP):
         af, socktype, proto, canonname, sa = res
 
@@ -126,19 +127,7 @@ def initConnection(host: str, port: int) -> socket.socket:
 
     return sock
 
-def md5Checksum(data) -> str:
-
-    checksum = hashlib.md5(data).hexdigest()
-
-    return checksum
-
-def md5Checksum2(data):
-
-    checksum = hashlib.md5(data).digest()
-
-    return checksum
-
-def calculateInternetChecksum(data):
+def calculateInternetChecksum(data: bytes):
     # Step 1: Convert data into a series of 16-bit integers
     if len(data) % 2 != 0:
         # If the length is odd, pad the data with a zero byte at the end
@@ -159,191 +148,209 @@ def calculateInternetChecksum(data):
     
     return checksum
 
-
-def buildFrameRequest(id, flag, data) :
-
-    length = struct.pack('>H', len(data))
-
-    data = data.encode('ascii') 
-
-    id_bin = struct.pack('>H', id)
+def byteFlagToStr(flags: bytes) -> str:
+    if (flags == FLAG_ACK_HEX):
+        return "ACK"
     
-    checksum = calculateInternetChecksum(SYNC_HEX + SYNC_HEX + CHKSUM_EMPTY + length + id_bin + flag + data)
-    checksum_bin = struct.pack('>H', checksum)
-
-    print('\n Frame enviado \n')
-    print('SYNC ', SYNC_HEX)
-    print('Checksum ', checksum)
-    print('checksum binario ', checksum_bin)
-    print('length ', length)
-    print('id ', id)
-    print('id bin ', id_bin)
-    print('flag ', flag)
-    print("Data ", data)
-    print()
-
-    return SYNC_HEX + SYNC_HEX + checksum_bin + length + id_bin + flag + data
-
-def returnResponseFormatted(sync1, sync2, checksum, len, id, flag):
-
-    if (sync1 != SYNC_HEX or sync2 != SYNC_HEX):
-        raise Exception('Invalid sync bytes')
+    if (flags == FLAG_END_HEX):
+        return "END"
     
-    checksum_int = struct.unpack('!H', checksum)[0]
-    len_int = struct.unpack('>H', len)[0]
-    id_int = struct.unpack('!H', id)[0]
+    if (flags == FLAG_RST_HEX):
+        return "RST"
+    
+    if (flags == FLAG_EMPTY_HEX):
+        return "EMPTY"
 
-    print("\nInformações recebidas: ")
-    print('chcksum original ' , checksum)
+    # Corrupted frame
+    return "ERR"
 
+def buildFrame(id: int, flags: bytes, data: bytes = bytes()) -> bytes:
+    length = struct.pack('!H', len(data))
+    idBin = struct.pack('!H', id)
+    
+    checksum = calculateInternetChecksum(SYNC_HEX + SYNC_HEX + CHKSUM_EMPTY_HEX + length + idBin + flags + data)
+    checksumBin = struct.pack('!H', checksum)
 
-    return checksum_int, len_int, id_int, flag.hex()
+    frame: bytes = SYNC_HEX + SYNC_HEX + checksumBin + length + idBin + flags + data
 
+    # Debug info
+    logging.debug(f"buildFrame: Built frame with {len(frame)} bytes:")
 
-def sendAuthRequest(sock, gas):
+    logging.debug(f"SYNC: {SYNC_HEX.hex()}")
+    logging.debug(f"SYNC: {SYNC_HEX.hex()}")
+    logging.debug(f"Checksum: {hex(checksum)}")
+    logging.debug(f"Length: {len(data)}")
+    logging.debug(f"ID: {id}")
+    logging.debug(f"Flags: {byteFlagToStr(flags)}")
+    logging.debug(f"Data HEX: {data.hex()}")
+    logging.debug(f"Data ASCII: {data.decode('ascii')}\n")
 
-    for idx in range(0, MIN_RETRANSMISSIONS_RETRIES):
-        if (idx == MIN_RETRANSMISSIONS_RETRIES-1):
-            sock.close()
-            raise Exception('Too many attempts, conection closed')
+    return frame
 
-        try:
+# This assumes frame has arbitrary length AND starts with SYNC_HEX + SYNC_HEX
+def checkFrame(sock: socket.socket, frame: bytes) -> tuple[bool, dict[str, Any]]:
+    # Check if frame starts with SYNC_HEX + SYNC_HEX
+    if (frame[0:8] != SYNC_HEX + SYNC_HEX):
+        logging.error(f"Check frame: frame does not start with SYNC_HEX + SYNC_HEX. Unrecoverable error. Aborting...")
+        sendResetRequest(sock)
 
-            frame = buildFrameRequest(ID_0, FLAG_END_HEX, gas + MESSAGE_TERMINATOR)
-            print("Frame enviado ", frame)
+    # Extract header
+    checksum: int = struct.unpack('!H', frame[8:10])[0]
+    length: int = struct.unpack('!H', frame[10:12])[0]
+    id: int = struct.unpack('!H', frame[12:14])[0]
+    flags: bytes = frame[14:15]
+    
+    if (length < 0 or length > MAX_PAYLOAD_SIZE):
+        logging.warning(f"Check frame: frame has invalid length.")
+        return False, dict()
+    
+    # If frame is misaligned, it might not have the full payload
+    if (len(frame) < HEADER_SIZE + length):
+        logging.warning(f"Check frame: frame is misaligned, length is bigger than available data.")
+        return False, dict()
+    
+    # Extract raw data
+    data: bytes = frame[HEADER_SIZE:HEADER_SIZE + length]
+    
+    # Extract full frame
+    frameFull: bytes = frame[0:HEADER_SIZE + length]
 
-            sock.sendall(frame)
+    # Set checksum to 0 to calculate the checksum of the frame
+    frameFull: bytes = frameFull[0:8] + CHKSUM_EMPTY_HEX + frameFull[10:]
 
-            for _ in range (1000):
-                pass
-            
-            sync1 = sock.recv(SYNC_LEN_BYTES) 
-            sync2 = sock.recv(SYNC_LEN_BYTES) 
-            checksum = sock.recv(CHKSUM_LEN_BYTES)
-            len = sock.recv(LENGHT_LEN_BYTES)
-            id = sock.recv(ID_LEN_BYTES)
-            flag = sock.recv(FLAG_LEN_BYTES)
+    checksumCalc: int = calculateInternetChecksum(frameFull)
 
-            #struct.unpack('>', response)
-            print(f'Resposta original: sync: {sync1} {sync2}, checksum: {checksum}, len: {len}, id: {id}, flag: {flag}')
+    if (checksum != checksumCalc):
+        logging.warning(f"Check frame: frame has invalid checksum.")
+        return False, dict()
+    
+    # Build frame data dict
+    frameData: dict[str, Any] = dict()
 
-            checksum_formatted, len_formatted, id_formatted, flag_formatted = returnResponseFormatted(sync1, sync2, checksum, len, id, flag)
+    frameData['checksumHex'] = hex(checksum)
+    frameData['length'] = length
+    frameData['lengthFull'] = length + HEADER_SIZE
+    frameData['id'] = id
+    frameData['flag'] = byteFlagToStr(flags)
+    frameData['dataRaw'] = data
 
-            data = sock.recv(len_formatted)
+    # Valid frame, carry on
+    return True, frameData
 
+def sendResetRequest(sock: socket.socket):
+    frame: bytes = buildFrame(ID_RST, FLAG_RST_HEX)
 
-            if (checksum_formatted != calculateInternetChecksum(sync1 + sync2 + CHKSUM_EMPTY + len + id + flag + data)):
-                raise Exception('Checksum invalid')
-            
-            data_formatted = data.decode('ascii')
+    sock.sendall(frame)
+    sock.close()
 
-            print(f'\nResponse formatted: checksum: {checksum_formatted}, len: {len_formatted}, id: {id_formatted}, flag: {flag_formatted}, data: {data_formatted}')
-            
-            print(flag)
-            print(FLAG_EMPTY_HEX)
-            print(data_formatted)
-            print(MESSAGE_COMPLETE_AUTHENTICATION)
-            if (flag == FLAG_EMPTY_HEX and data_formatted == MESSAGE_COMPLETE_AUTHENTICATION):
-                return True            
+    logging.info(f"Sent RST request. Connection closed. Exiting...")
 
-        except socket.timeout:
-            raise Exception('Too many attempts, conection closed')
-        
-    return False
+    exit(0)
 
+def sendFrameAndWaitForACK(sock: socket.socket, frame: bytes):
+    sock.sendall(frame)
 
-'''
-AUTHENTICATION WORKS
+    global CURR_TRANSMITTED_ID
 
-TODO: AFTER AUTHENTICATION, RECEIVE INFO AND CALCULATE MD5
+    # Wait for ACK, retransmit up to MIN_RETRANSMISSIONS_RETRIES times
+    attempts: int = MIN_RETRANSMISSIONS_RETRIES
 
-'''
-
-def sendPayload(
-    sock: socket.socket,
-    payload: dict[str, Any],
-) -> dict[str, Any]:
-    """
-    Send payload to socket.
-
-    Automatically handles packet drops when sending or receiving.
-
-    If there is no response from the server after `MAX_ATTEMPTS`, nothing will be returned.
-
-    #### There is a special case for requests of type `getturn`:
-        - Only the first bridge data is returned.
-        - If the first bridge is not present in the received data, a retransmission is made.
-        - All other bridges are ignored, whether they were received or not.
-
-    Parameters
-    ----------
-    `sock`: Socket with a valid connection.
-    `payload`: Payload to send as a json formatted dict.
-
-    Returns
-    -------
-    `result`: A json formatted dict with the response data from the server.
-    """
-
-    attempts: int = MAX_ATTEMPTS
-
-    sock.settimeout(TIMEOUT_SEC)
+    # sock.settimeout(TIMEOUT_SEC)
 
     while attempts:
-        res: bytes = bytes()
-
         try:
-            sock.sendall(json.dumps(payload).encode("ascii"))
+            res: bytes = sock.recv(BUF_SIZE)
 
-            # Try to receive as much data as possible until a timeout occurs
-            while True:
-                chunk: bytes = sock.recv(BUF_SIZE)
-                res += chunk
+            # TODO TEST SYNC LATER (APPARENTLY WORKING) print(res.decode('ascii'))
+            
+            # Sync frame
+            frameStartIdx: int = res.find(SYNC_HEX + SYNC_HEX) # TODO: maybe deal with misaligned frames, partial frames
 
-        except socket.timeout:
-            logging.debug(
-                f"Socket connected to {sock.getsockname()}, received {len(res)} bytes in total"
-            )
+            (valid, frameRecv) = checkFrame(sock, res[frameStartIdx:])
 
-            if len(res) > 0:
-                logging.debug(res.decode("ascii"))
+            if (valid):
+                logging.debug(f"sendFrameAndWaitForACK: Received valid frame: {frameRecv}")
 
-                # Ensure concatenated dicts will parse properly when receiveing 'getturn' data
-                # Also ensure 'getturn' got first bridge data
-                if payload["type"] == "getturn":
-                    res = res.replace(b"}{", b"},\n{")
-                    res = b"[" + res + b"]"
+                # Got ACK for last transmitted frame
+                if frameRecv['flag'] == "ACK" and frameRecv['id'] == CURR_TRANSMITTED_ID:
+                    CURR_TRANSMITTED_ID = 1 if CURR_TRANSMITTED_ID == 0 else 0
+                    return
 
-                    resDict: list[dict[str, Any]] = json.loads(res)
+            logging.warning(f"sendFrameAndWaitForACK: Received invalid frame: {res.decode('ascii')}")
 
-                    # Got first bridge or game over
-                    if resDict[0]["type"] == "gameover" or resDict[0]["bridge"] == 1:
-                        return resDict[0]
+            raise Exception('Invalid frame received')
+        except Exception:
+            # Retransmit
+            time.sleep(RETRANSMISSION_TIME_SEC)
 
-                elif payload["type"] == "shot":
-                    # Ensure concatenated dicts will parse properly when receiveing multiple 'shots' data
-                    res = res.replace(b"}{", b"},\n{")
-                    res = b"[" + res + b"]"
-
-                    return json.loads(res)
-
-                else:
-                    # For other payload types, just return parsed data
-                    return json.loads(res)
-
-            # If no data was received at all or an error occurred, retransmit
+            sock.sendall(frame)
             attempts -= 1
 
-        except OSError as msg:
-            logging.error(
-                f"Socket connected to {sock.getsockname()}, could not send and/or receive data. {msg}"
-            )
+def grading1(sock: socket.socket, gas: str):
+    global CURR_TRANSMITTED_ID
 
-    # No data received after TIMEOUT_SEC * attempts
-    return dict()
+    messageFull: str = ""
 
+    # Step 1: Authenticate with the server
+    frame: bytes = buildFrame(CURR_TRANSMITTED_ID, FLAG_EMPTY_HEX, gas.encode('ascii') + MESSAGE_TERMINATOR)
 
+    sendFrameAndWaitForACK(sock, frame)
 
+    # Step 2: Receive and send messages until END
+    while True:
+        res: bytes = sock.recv(BUF_SIZE)
+
+        idx: int = res.find(SYNC_HEX + SYNC_HEX)
+
+        (valid, data) = checkFrame(sock, res[idx:])
+
+        if (valid):
+            logging.debug(f"grading1: Received valid frame: {data}")
+
+            # Skip multiple ACKs received
+            if data['flag'] == "ACK":
+                logging.debug(f"grading1: Duplicate ACK. Skipping...")
+                continue
+            
+            # Send ACK for received frame
+            frameACK: bytes = buildFrame(data['id'], FLAG_ACK_HEX)
+            sock.sendall(frameACK)
+
+            logging.debug(f"Sent ACK for ID {data['id']} with ID {data['id']}")
+
+            # Grading finished, no need to send MD5
+            if data['flag'] == "END":
+                logging.info("Grading 1 complete. Exiting...")
+                break
+            
+            # Get ASCII message
+            messageRecv: str = data['dataRaw'].decode('ascii')
+
+            # Partial message, concatenate with previous partial message
+            if not '\n' in messageRecv:
+                messageFull += messageRecv
+            else:
+            # Full or multiple messages
+                splitMessages: list[str] = messageRecv.split('\n')
+
+                # Finish partial message or just send full message
+                for msg in splitMessages:
+                    if len(msg) == 0:
+                        continue
+
+                    messageFull += msg
+
+                    # Build MD5 frame
+                    md5: str = hashlib.md5(messageFull.encode('ascii')).hexdigest()
+
+                    frameMD5: bytes = buildFrame(CURR_TRANSMITTED_ID, FLAG_EMPTY_HEX, md5.encode('ascii') + MESSAGE_TERMINATOR)
+
+                    logging.debug(f"Sent MD5 for ID {data['id']} with ID {CURR_TRANSMITTED_ID}. Message: \"{messageFull}\"")
+
+                    sendFrameAndWaitForACK(sock, frameMD5)
+
+                    # Reset accumulated message
+                    messageFull = ""
 
 if __name__ == "__main__":
     # Get args and init log
@@ -352,9 +359,6 @@ if __name__ == "__main__":
 
     host, port = args.hostport.split(":")
     port = int(port)
-
-    print(host)
-    print(port)
 
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s: %(message)s",
@@ -366,22 +370,7 @@ if __name__ == "__main__":
     )
 
     sock = initConnection(host, port)
-
     
-    # Step 1: Begin authentication
-    statusAuth = sendAuthRequest(sock, args.gas)
-
-    if (statusAuth == False):
-        logging.error(f"Authentication failed with a server. Aborted")
-        exit(1)     
-    
-    logging.info(f"Authentication complete with server")
+    grading1(sock, args.gas)
 
     sock.close()
-
-    raise
-
-    for r in res:
-        if r["status"] != 0:
-            logging.error(f"Authentication failed with a server. Aborted")
-            exit(1)
