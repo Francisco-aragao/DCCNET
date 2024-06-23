@@ -191,7 +191,7 @@ def buildFrame(id: int, flags: bytes, data: bytes = bytes()) -> bytes:
 def checkFrame(sock: socket.socket, frame: bytes) -> tuple[bool, dict[str, Any]]:
     # Check if frame starts with SYNC_HEX + SYNC_HEX
     if (frame[0:8] != SYNC_HEX + SYNC_HEX):
-        logging.error(f"Check frame: frame does not start with SYNC_HEX + SYNC_HEX. Unrecoverable error. Aborting...")
+        logging.error(f"checkFrame: frame does not start with SYNC_HEX + SYNC_HEX. Unrecoverable error. Aborting...")
         sendResetRequest(sock)
 
     # Extract header
@@ -201,12 +201,12 @@ def checkFrame(sock: socket.socket, frame: bytes) -> tuple[bool, dict[str, Any]]
     flags: bytes = frame[14:15]
     
     if (length < 0 or length > MAX_PAYLOAD_SIZE):
-        logging.warning(f"Check frame: frame has invalid length.")
+        logging.warning(f"checkFrame: frame has invalid length.")
         return False, dict()
     
     # If frame is misaligned, it might not have the full payload
     if (len(frame) < HEADER_SIZE + length):
-        logging.warning(f"Check frame: frame is misaligned, length is bigger than available data.")
+        logging.warning(f"checkFrame: frame is misaligned, length is bigger than available data.")
         return False, dict()
     
     # Extract raw data
@@ -246,6 +246,11 @@ def sendResetRequest(sock: socket.socket):
     logging.info(f"Sent RST request. Connection closed. Exiting...")
 
     exit(0)
+
+def sendACK(sock: socket.socket, id: int):
+    frame: bytes = buildFrame(id, FLAG_ACK_HEX)
+
+    sock.sendall(frame)
 
 def sendFrameAndWaitForACK(sock: socket.socket, frame: bytes):
     sock.sendall(frame)
@@ -313,8 +318,7 @@ def grading1(sock: socket.socket, gas: str):
                 continue
             
             # Send ACK for received frame
-            frameACK: bytes = buildFrame(data['id'], FLAG_ACK_HEX)
-            sock.sendall(frameACK)
+            sendACK(sock, data['id'])
 
             logging.debug(f"Sent ACK for ID {data['id']} with ID {data['id']}")
 
