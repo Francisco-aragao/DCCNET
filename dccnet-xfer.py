@@ -50,7 +50,7 @@ LAST_RECEIVED_CHKSUM: bytes = CHKSUM_EMPTY_HEX
 
 MESSAGE_TERMINATOR: bytes = b'\n'
 
-def initParser() -> argparse.ArgumentParser:
+def initParser() :
     """
     Initialize the argument parser.
     """
@@ -60,8 +60,8 @@ def initParser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
-        "-s"
-        "port",
+        "-s",
+        "--port",
         metavar="port",
         type=str,
         help="Server port.",
@@ -69,8 +69,8 @@ def initParser() -> argparse.ArgumentParser:
 
 
     parser.add_argument(
-        "-c"
-        "hostport",
+        "-c",
+        "--hostport",
         metavar="host:port",
         type=str,
         help="Server host and port in the format <host>:<port>.",
@@ -158,6 +158,19 @@ def listenForConnections(port: int) -> socket.socket:
     `socket`: A socket listening on port if successful.
     """
 
+    HOST = ''                 # Symbolic name meaning all available interfaces
+    PORT = 64646              # Arbitrary non-privileged port
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind((HOST, PORT))
+        s.listen(1)
+        conn, addr = s.accept()
+        with conn:
+            print('Connected by', addr)
+            while True:
+                data = conn.recv(1024)
+                if not data: break
+                conn.sendall(data)
+
     sock = None
 
     # This will resolve any hostname, and check for IPv4 and IPv6 addresses
@@ -174,9 +187,17 @@ def listenForConnections(port: int) -> socket.socket:
             sock = None
             continue
         try:
-            sock.bind(sa)
+            print(sa)
+            sock.bind(('', sa[1]))
             sock.listen(1)
+
+            conn, addr = sock.accept()
+            
+            
+            print('Connected by', addr)
+            
         except OSError as msg:
+            print("erro")
             logging.warning(f"Attempt at binding socket to {sa} failed. {msg}")
 
             sock.close()
@@ -310,6 +331,11 @@ def sendResetRequest(sock: socket.socket):
 
     exit(0)
 
+def sendACK(sock: socket.socket, id: int):
+    frame: bytes = buildFrame(id, FLAG_ACK_HEX)
+
+    sock.sendall(frame)
+
 def sendFrameAndWaitForACK(sock: socket.socket, frame: bytes):
     sock.sendall(frame)
 
@@ -348,3 +374,99 @@ def sendFrameAndWaitForACK(sock: socket.socket, frame: bytes):
 
             sock.sendall(frame)
             attempts -= 1
+
+
+def grading2(sock: socket.socket, gas: str):
+    global CURR_TRANSMITTED_ID
+
+    messageFull: str = ""
+
+    # Step 1: Authenticate with the server
+    frame: bytes = buildFrame(CURR_TRANSMITTED_ID, FLAG_EMPTY_HEX, gas.encode('ascii') + MESSAGE_TERMINATOR)
+
+    sendFrameAndWaitForACK(sock, frame)
+
+    # Step 2: Receive and send messages until END
+    while True:
+        res: bytes = sock.recv(BUF_SIZE)
+
+        idx: int = res.find(SYNC_HEX + SYNC_HEX)
+
+        (valid, data) = checkFrame(sock, res[idx:])
+
+        if (valid):
+            logging.debug(f"grading1: Received valid frame: {data}")
+
+            # Skip multiple ACKs received
+            if data['flag'] == "ACK":
+                logging.debug(f"grading1: Duplicate ACK. Skipping...")
+                continue
+            
+            # Send ACK for received frame
+            sendACK(sock, data['id'])
+
+            logging.debug(f"Sent ACK for ID {data['id']} with ID {data['id']}")
+
+            # Grading finished, no need to send MD5
+            if data['flag'] == "END":
+                logging.info("Grading 1 complete. Exiting...")
+                break
+            
+            # Get ASCII message
+            messageRecv: str = data['dataRaw'].decode('ascii')
+
+            # Partial message, concatenate with previous partial message
+            if not '\n' in messageRecv:
+                messageFull += messageRecv
+            else:
+            # Full or multiple messages
+                splitMessages: list[str] = messageRecv.split('\n')
+
+                # Finish partial message or just send full message
+                for msg in splitMessages:
+                    if len(msg) == 0:
+                        continue
+
+                    messageFull += msg
+
+                    # Build MD5 frame
+                    md5: str = hashlib.md5(messageFull.encode('ascii')).hexdigest()
+
+                    frameMD5: bytes = buildFrame(CURR_TRANSMITTED_ID, FLAG_EMPTY_HEX, md5.encode('ascii') + MESSAGE_TERMINATOR)
+
+                    logging.debug(f"Sent MD5 for ID {data['id']} with ID {CURR_TRANSMITTED_ID}. Message: \"{messageFull}\"")
+
+                    sendFrameAndWaitForACK(sock, frameMD5)
+
+                    # Reset accumulated message
+                    messageFull = ""
+
+if __name__ == "__main__":
+    # Get args and init log
+
+    logging.basicConfig(
+        format="%(asctime)s - %(levelname)s: %(message)s",
+        datefmt="%m/%d/%Y %I:%M:%S %p",
+        level=logging.DEBUG,
+        filename="client.log",
+        filemode="w",
+        encoding="utf-8",
+    )
+
+    parser = initParser()
+    args = parser.parse_args()
+
+    if args.hostport == None: # -s
+        sock = listenForConnections(args.port)
+    else:
+        sock = initConnection(args.hostport.split(':')[0], int(args.hostport.split(':')[1]))
+    
+    print(sock)
+    
+    while(True):
+        pass
+
+    raise
+    grading2(sock, args.gas)
+
+    sock.close()
