@@ -247,7 +247,6 @@ def receiveAndCheckFrame(sock: socket.socket) -> dict[str, Any] | None:
             # Received RST frame, abort
             if frame['flag'] == "RST":
                 logging.error(f"receiveAndCheckFrame: Received RST frame. Aborting...")
-                logging.error(f"RST frame: {frame}")
 
                 sock.close()
                 exit(0)
