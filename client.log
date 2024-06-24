@@ -1,3 +1,0 @@
-06/23/2024 07:46:03 PM - WARNING: Attempt at binding socket to ('0.0.0.0', 64646) failed. [Errno 98] Address already in use
-06/23/2024 07:46:03 PM - WARNING: Attempt at binding socket to ('::', 64646, 0, 0) failed. [Errno 98] Address already in use
-06/23/2024 07:46:03 PM - ERROR: Could not open a valid socket
