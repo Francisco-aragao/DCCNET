@@ -247,44 +247,44 @@ def receiveAndCheckFrame(sock: socket.socket, skipDataQueue: bool = False) -> di
 
         (valid, frame) = checkFrame(response[frameStartIdx:])
 
-        if valid:
-            logging.debug(f"receiveAndCheckFrame: Received valid frame: {frame}")
+        if not valid:
+            return None
+        
+        logging.debug(f"receiveAndCheckFrame: Received valid frame: {frame}")
 
-            # Received RST frame, abort
-            if frame['flag'] == "RST":
-                logging.error(f"receiveAndCheckFrame: Received RST frame. Aborting...")
+        # Received RST frame, abort
+        if frame['flag'] == "RST":
+            logging.error(f"receiveAndCheckFrame: Received RST frame. Aborting...")
 
-                sock.close()
-                exit(0)
+            sock.close()
+            exit(0)
 
-            # Received data frame, check for retransmitted frame
-            if frame['flag'] != "ACK":
-                if frame['id'] == dccnet.lastReceivedID and frame['checksumHex'] == dccnet.lastReceivedChksumHex:
-                    logging.warning(f"receiveAndCheckFrame: Received duplicate data frame. Re-sending ACK and skipping...")
+        # Received data frame, check for retransmitted frame
+        if frame['flag'] != "ACK":
+            if frame['id'] == dccnet.lastReceivedID and frame['checksumHex'] == dccnet.lastReceivedChksumHex:
+                logging.warning(f"receiveAndCheckFrame: Received duplicate data frame. Re-sending ACK and skipping...")
 
-                    sendACK(sock, frame['id'])
-                    continue
-
-                # Update last received data frame if it's a new one, also send ACK
                 sendACK(sock, frame['id'])
-                dccnet.updateLastFrameReceived(frame) 
+                continue
 
-                # If we're waiting for ACK, queue this frame and continue
-                if dccnet.waitingForACK:
-                    dccnet.receivedDataQueue.append(frame)
-                    continue
+            # Update last received data frame if it's a new one, also send ACK
+            sendACK(sock, frame['id'])
+            dccnet.updateLastFrameReceived(frame) 
 
-            # Received duplicate ACK frame (we are not waiting for ACK, because we have ACKed the last data frame)
-            if frame['flag'] == "ACK" and not dccnet.waitingForACK:
-                if frame['id'] == dccnet.lastTransmitID:
-                    logging.warning(f"receiveAndCheckFrame: Received duplicate ACK frame. Skipping...")
-                    continue
+            # If we're waiting for ACK, queue this frame and continue
+            # This way we can receive frames while waiting to send another
+            if dccnet.waitingForACK:
+                dccnet.receivedDataQueue.append(frame)
+                continue
 
-            # Return valid ACK frame or new data frame
-            return frame
+        # Received duplicate ACK frame (we are not waiting for ACK, because we have ACKed the last data frame)
+        if frame['flag'] == "ACK" and not dccnet.waitingForACK:
+            if frame['id'] == dccnet.lastTransmitID:
+                logging.warning(f"receiveAndCheckFrame: Received duplicate ACK frame. Skipping...")
+                continue
 
-        # Received frame is invalid
-        return None
+        # Return valid ACK frame or new data frame
+        return frame
 
 def sendFrameAndWaitForACK(sock: socket.socket, frame: bytes):
     attempts: int = MIN_RETRANSMISSIONS_RETRIES
@@ -317,10 +317,9 @@ def sendFrameAndWaitForACK(sock: socket.socket, frame: bytes):
                 dccnet.waitingForACK = False
                 return
 
-        # checkFrame returned None, invalid frame or timeout expired
-        if frameRecv is None:
-            attemptNum: int = MIN_RETRANSMISSIONS_RETRIES - attempts + 1
-            logging.warning(f"sendFrameAndWaitForACK: No ACK received ({attemptNum}/{MIN_RETRANSMISSIONS_RETRIES}). Retransmitting...")  
+        # checkFrame returned None or invalid ACK
+        attemptNum: int = MIN_RETRANSMISSIONS_RETRIES - attempts + 1
+        logging.warning(f"sendFrameAndWaitForACK: No ACK received ({attemptNum}/{MIN_RETRANSMISSIONS_RETRIES}). Retransmitting...")  
 
         # Retransmit
         time.sleep(RETRANSMISSION_TIME_SEC)
