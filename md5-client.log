@@ -1,206 +1,206 @@
-06/25/2024 11:37:49 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x101d', 'length': 299, 'lengthFull': 314, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'2021031629:4:1bfb00806dfff00860f34f39494a2f6fd1904ed29f9eab7bdf044dca28364e1e+2021031726:4:04ffa8a7b4c42f5c6715514d6b1c90ee8105a85cd328af27ff1edb01ca7124a2+2021096887:4:408100f3ec730df91c5d2493ff1284f7234ec552c9a22e374cdf75cc490463dd+52ba0d0028eae2a34eae7fc3db5f60898de3817245d834976e7d8938aae7d86e\n'}
-06/25/2024 11:37:49 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:37:49 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
-06/25/2024 11:37:49 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x5420', 'length': 24, 'lengthFull': 39, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'authentication complete\n'}
-06/25/2024 11:37:49 PM - DEBUG: sendACK: Sending ACK for ID 0
-06/25/2024 11:37:49 PM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "authentication complete"
-06/25/2024 11:37:49 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xec43', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'edd3c754e806161fdec0351779931db1\n'}
-06/25/2024 11:37:49 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:37:49 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
-06/25/2024 11:37:49 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xf206', 'length': 17, 'lengthFull': 32, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'entering phase 1\n'}
-06/25/2024 11:37:49 PM - DEBUG: sendACK: Sending ACK for ID 1
-06/25/2024 11:37:49 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "entering phase 1"
-06/25/2024 11:37:49 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xffd1', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'729913ce41ad801238a23022341f47fd\n'}
-06/25/2024 11:37:49 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:37:49 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
-06/25/2024 11:37:50 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x4457', 'length': 49, 'lengthFull': 64, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test line 0 62dee146-1821-4f15-b577-87e64c2ebe08\n'}
-06/25/2024 11:37:50 PM - DEBUG: sendACK: Sending ACK for ID 0
-06/25/2024 11:37:50 PM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "test line 0 62dee146-1821-4f15-b577-87e64c2ebe08"
-06/25/2024 11:37:50 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xced3', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'901348ff871c8800b40dc22527ab007a\n'}
-06/25/2024 11:37:50 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:37:50 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
-06/25/2024 11:37:50 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xbbf4', 'length': 49, 'lengthFull': 64, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'test line 1 2c6b8e15-c5c9-45fe-a27c-c6ec023dc3f6\n'}
-06/25/2024 11:37:50 PM - DEBUG: sendACK: Sending ACK for ID 1
-06/25/2024 11:37:50 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 1 2c6b8e15-c5c9-45fe-a27c-c6ec023dc3f6"
-06/25/2024 11:37:50 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xa849', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'7280bd451ddfbbc509c0a40b102190bf\n'}
-06/25/2024 11:37:50 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:37:50 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
-06/25/2024 11:37:50 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x903a', 'length': 49, 'lengthFull': 64, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test line 2 80323241-f23d-430b-9be2-bf02ba31e010\n'}
-06/25/2024 11:37:50 PM - DEBUG: sendACK: Sending ACK for ID 0
-06/25/2024 11:37:50 PM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "test line 2 80323241-f23d-430b-9be2-bf02ba31e010"
-06/25/2024 11:37:50 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x64a0', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'33827cd6dd56a802bf259d01082eef5a\n'}
-06/25/2024 11:37:50 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:37:50 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
-06/25/2024 11:37:50 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x4b80', 'length': 49, 'lengthFull': 64, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'test line 3 449fb429-0ac5-4d37-ac48-29769b20137b\n'}
-06/25/2024 11:37:50 PM - DEBUG: sendACK: Sending ACK for ID 1
-06/25/2024 11:37:50 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 3 449fb429-0ac5-4d37-ac48-29769b20137b"
-06/25/2024 11:37:50 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x14', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'f4ccb00d41c050d6d5aec8275432634f\n'}
-06/25/2024 11:37:50 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:37:50 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
-06/25/2024 11:37:50 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xd6c4', 'length': 49, 'lengthFull': 64, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test line 4 08d97780-38bb-485c-9133-cdd2a283d2c3\n'}
-06/25/2024 11:37:50 PM - DEBUG: sendACK: Sending ACK for ID 0
-06/25/2024 11:37:50 PM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "test line 4 08d97780-38bb-485c-9133-cdd2a283d2c3"
-06/25/2024 11:37:50 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x70ea', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'030378f402eae4de00cefce91b0cdca2\n'}
-06/25/2024 11:37:50 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:37:50 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
-06/25/2024 11:37:50 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xeeeb', 'length': 37, 'lengthFull': 52, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'entering phase 2 retransmission test\n'}
-06/25/2024 11:37:50 PM - DEBUG: sendACK: Sending ACK for ID 1
-06/25/2024 11:37:50 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "entering phase 2 retransmission test"
-06/25/2024 11:37:50 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x34f3', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'0e30c4436289108150c5679f4531ff30\n'}
-06/25/2024 11:37:51 PM - WARNING: receiveAndCheckFrame: Timeout expired.
-06/25/2024 11:37:51 PM - WARNING: sendFrameAndWaitForACK: No ACK received (1/16). Retransmitting...
-06/25/2024 11:37:52 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xd6bc', 'length': 65, 'lengthFull': 80, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'second message cannot be answered immediately due to missing ack\n'}
-06/25/2024 11:37:52 PM - DEBUG: sendACK: Sending ACK for ID 0
-06/25/2024 11:37:53 PM - WARNING: receiveAndCheckFrame: Timeout expired.
-06/25/2024 11:37:53 PM - WARNING: sendFrameAndWaitForACK: No ACK received (2/16). Retransmitting...
-06/25/2024 11:37:55 PM - WARNING: receiveAndCheckFrame: Timeout expired.
-06/25/2024 11:37:55 PM - WARNING: sendFrameAndWaitForACK: No ACK received (3/16). Retransmitting...
-06/25/2024 11:37:57 PM - WARNING: receiveAndCheckFrame: Timeout expired.
-06/25/2024 11:37:57 PM - WARNING: sendFrameAndWaitForACK: No ACK received (4/16). Retransmitting...
-06/25/2024 11:37:58 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:37:58 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
-06/25/2024 11:37:58 PM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "second message cannot be answered immediately due to missing ack"
-06/25/2024 11:37:58 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xc8a0', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'7602a24117f5a631ed03e5732e5f4f6d\n'}
-06/25/2024 11:37:58 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:37:58 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
-06/25/2024 11:37:59 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xa1b0', 'length': 29, 'lengthFull': 44, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'entering phase 3 resync test\n'}
-06/25/2024 11:37:59 PM - DEBUG: sendACK: Sending ACK for ID 1
-06/25/2024 11:37:59 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "entering phase 3 resync test"
-06/25/2024 11:37:59 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xb9bf', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'44027226ffb8f96b269f2889df8b0194\n'}
-06/25/2024 11:37:59 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:37:59 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
-06/25/2024 11:37:59 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xf228', 'length': 49, 'lengthFull': 64, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test line 0 16928d64-41eb-4a5e-85d7-d1a05b3fa4ba\n'}
-06/25/2024 11:37:59 PM - DEBUG: sendACK: Sending ACK for ID 0
-06/25/2024 11:37:59 PM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "test line 0 16928d64-41eb-4a5e-85d7-d1a05b3fa4ba"
-06/25/2024 11:37:59 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x6890', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'74e02c8d165ca756302a8d9c7fd7e8a4\n'}
-06/25/2024 11:37:59 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:37:59 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
-06/25/2024 11:37:59 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xc8fe', 'length': 49, 'lengthFull': 64, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'test line 1 b2fc5402-9671-49ce-826f-a2780757da52\n'}
-06/25/2024 11:37:59 PM - DEBUG: sendACK: Sending ACK for ID 1
-06/25/2024 11:37:59 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 1 b2fc5402-9671-49ce-826f-a2780757da52"
-06/25/2024 11:37:59 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xb2ce', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'13c2a0177d19cf79561d78394a5f78d6\n'}
-06/25/2024 11:37:59 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:37:59 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
-06/25/2024 11:37:59 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x25b8', 'length': 49, 'lengthFull': 64, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test line 2 dce1228f-da04-4cc4-b944-c079fa9f98a0\n'}
-06/25/2024 11:37:59 PM - DEBUG: sendACK: Sending ACK for ID 0
-06/25/2024 11:37:59 PM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "test line 2 dce1228f-da04-4cc4-b944-c079fa9f98a0"
-06/25/2024 11:37:59 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x8b5a', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'83f6b9ed2468e98f5b957445c04e0dee\n'}
-06/25/2024 11:37:59 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:37:59 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
-06/25/2024 11:37:59 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x3b40', 'length': 49, 'lengthFull': 64, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'test line 3 79d9668b-93bd-4e86-8c5e-4b4b4348918c\n'}
-06/25/2024 11:37:59 PM - DEBUG: sendACK: Sending ACK for ID 1
-06/25/2024 11:37:59 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 3 79d9668b-93bd-4e86-8c5e-4b4b4348918c"
-06/25/2024 11:37:59 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xf4c6', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'58930c1d4bd2c41c858266794326c8c2\n'}
-06/25/2024 11:37:59 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:37:59 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
-06/25/2024 11:38:00 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x882', 'length': 49, 'lengthFull': 64, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test line 4 3f3c0975-0637-4719-97a8-cf2fe6bd6f33\n'}
-06/25/2024 11:38:00 PM - DEBUG: sendACK: Sending ACK for ID 0
-06/25/2024 11:38:00 PM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "test line 4 3f3c0975-0637-4719-97a8-cf2fe6bd6f33"
-06/25/2024 11:38:00 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xccb8', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'f50336cffda2dcdd76bb20c4b2c83105\n'}
-06/25/2024 11:38:00 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:00 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
-06/25/2024 11:38:00 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x9d49', 'length': 38, 'lengthFull': 53, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'entering phase 4 partial message test\n'}
-06/25/2024 11:38:00 PM - DEBUG: sendACK: Sending ACK for ID 1
-06/25/2024 11:38:00 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "entering phase 4 partial message test"
-06/25/2024 11:38:00 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x44ab', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'0aac0ca0402487bd6c19badd3331367e\n'}
-06/25/2024 11:38:00 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:00 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
-06/25/2024 11:38:01 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x24ed', 'length': 5, 'lengthFull': 20, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test '}
-06/25/2024 11:38:01 PM - DEBUG: sendACK: Sending ACK for ID 0
-06/25/2024 11:38:01 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x490', 'length': 44, 'lengthFull': 59, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'line 0 1fb6b274-40de-44ec-b1e3-b6f7d19b8e7f\n'}
-06/25/2024 11:38:01 PM - DEBUG: sendACK: Sending ACK for ID 1
-06/25/2024 11:38:01 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 1. MD5 for: "test line 0 1fb6b274-40de-44ec-b1e3-b6f7d19b8e7f"
-06/25/2024 11:38:01 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x7f9b', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'38ce37389c771e198fe5a0478cb7cc18\n'}
-06/25/2024 11:38:01 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:01 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
-06/25/2024 11:38:01 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x24ed', 'length': 5, 'lengthFull': 20, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test '}
-06/25/2024 11:38:01 PM - DEBUG: sendACK: Sending ACK for ID 0
-06/25/2024 11:38:01 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x4c7', 'length': 44, 'lengthFull': 59, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'line 1 85639ba3-b324-4651-8ee5-2faaa3efb5db\n'}
-06/25/2024 11:38:01 PM - DEBUG: sendACK: Sending ACK for ID 1
-06/25/2024 11:38:01 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 1 85639ba3-b324-4651-8ee5-2faaa3efb5db"
-06/25/2024 11:38:01 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xcbd6', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'966806521d87313b4e20c0aeb2bc3309\n'}
-06/25/2024 11:38:01 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:01 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
-06/25/2024 11:38:02 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x24ed', 'length': 5, 'lengthFull': 20, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test '}
-06/25/2024 11:38:02 PM - DEBUG: sendACK: Sending ACK for ID 0
-06/25/2024 11:38:02 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x6571', 'length': 44, 'lengthFull': 59, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'line 2 b59f3859-8e59-4d25-932e-313043f606ae\n'}
-06/25/2024 11:38:02 PM - DEBUG: sendACK: Sending ACK for ID 1
-06/25/2024 11:38:02 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 1. MD5 for: "test line 2 b59f3859-8e59-4d25-932e-313043f606ae"
-06/25/2024 11:38:02 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xcd26', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'263cef177d5053e69854165a63014d40\n'}
-06/25/2024 11:38:02 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:02 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
-06/25/2024 11:38:02 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x24ed', 'length': 5, 'lengthFull': 20, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test '}
-06/25/2024 11:38:02 PM - DEBUG: sendACK: Sending ACK for ID 0
-06/25/2024 11:38:02 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x9516', 'length': 44, 'lengthFull': 59, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'line 3 1ef33994-72d3-433a-981f-83be3f18d702\n'}
-06/25/2024 11:38:02 PM - DEBUG: sendACK: Sending ACK for ID 1
-06/25/2024 11:38:02 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 3 1ef33994-72d3-433a-981f-83be3f18d702"
-06/25/2024 11:38:02 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x693a', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'79898cf3d30b982b18bbab2bf3b0bb47\n'}
-06/25/2024 11:38:02 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:02 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
-06/25/2024 11:38:02 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x24ed', 'length': 5, 'lengthFull': 20, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test '}
-06/25/2024 11:38:02 PM - DEBUG: sendACK: Sending ACK for ID 0
-06/25/2024 11:38:02 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xc5ea', 'length': 44, 'lengthFull': 59, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'line 4 5d132767-3ba0-4e03-a0e8-4885cc57e388\n'}
-06/25/2024 11:38:02 PM - DEBUG: sendACK: Sending ACK for ID 1
-06/25/2024 11:38:02 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 1. MD5 for: "test line 4 5d132767-3ba0-4e03-a0e8-4885cc57e388"
-06/25/2024 11:38:02 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x6c2d', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'de56ea94b79b2481434bb9e2ec63cf3d\n'}
-06/25/2024 11:38:02 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:02 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
-06/25/2024 11:38:02 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xe382', 'length': 39, 'lengthFull': 54, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'entering phase 5 multiple message test\n'}
-06/25/2024 11:38:02 PM - DEBUG: sendACK: Sending ACK for ID 0
-06/25/2024 11:38:02 PM - DEBUG: grading1: Sending MD5 for ID 0 with ID 0. MD5 for: "entering phase 5 multiple message test"
-06/25/2024 11:38:02 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x80ca', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'5bb1e93bf3212e3a901823eb2b92305a\n'}
-06/25/2024 11:38:02 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:02 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
-06/25/2024 11:38:03 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x2744', 'length': 100, 'lengthFull': 115, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'test line 0a 9bf2f1c0-77a8-4933-b022-1ddad729842a\ntest line 0b fc7cfa5f-d55a-428b-b42e-63a82f05a86b\n'}
-06/25/2024 11:38:03 PM - DEBUG: sendACK: Sending ACK for ID 1
-06/25/2024 11:38:03 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 1. MD5 for: "test line 0a 9bf2f1c0-77a8-4933-b022-1ddad729842a"
-06/25/2024 11:38:03 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xe8a', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'd59f8e2bcea6752bccde419b4a765373\n'}
-06/25/2024 11:38:03 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:03 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
-06/25/2024 11:38:03 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 0b fc7cfa5f-d55a-428b-b42e-63a82f05a86b"
-06/25/2024 11:38:03 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x7327', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'54854bc18032deb9618ffe8cdb7fe0b4\n'}
-06/25/2024 11:38:03 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:03 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
-06/25/2024 11:38:03 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xa2df', 'length': 100, 'lengthFull': 115, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test line 1a 22ab51f3-51bf-46cd-8f0c-3aa4dacebc13\ntest line 1b 46945bfa-2281-48e2-a1b5-d76bf1822462\n'}
-06/25/2024 11:38:03 PM - DEBUG: sendACK: Sending ACK for ID 0
-06/25/2024 11:38:03 PM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "test line 1a 22ab51f3-51bf-46cd-8f0c-3aa4dacebc13"
-06/25/2024 11:38:03 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x615c', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'40bb50e792941b59b1e8f240a5639656\n'}
-06/25/2024 11:38:04 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:04 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
-06/25/2024 11:38:04 PM - DEBUG: grading1: Sending MD5 for ID 0 with ID 0. MD5 for: "test line 1b 46945bfa-2281-48e2-a1b5-d76bf1822462"
-06/25/2024 11:38:04 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x7495', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'f2aa125e3f90e8841cb23a13863e75fa\n'}
-06/25/2024 11:38:04 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:04 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
-06/25/2024 11:38:04 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x9b2b', 'length': 100, 'lengthFull': 115, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'test line 2a a1dc495e-2afa-4821-829f-fa3dc65a945b\ntest line 2b 6cdb4566-a782-48ff-b0da-f46af285cfb4\n'}
-06/25/2024 11:38:04 PM - DEBUG: sendACK: Sending ACK for ID 1
-06/25/2024 11:38:04 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 1. MD5 for: "test line 2a a1dc495e-2afa-4821-829f-fa3dc65a945b"
-06/25/2024 11:38:04 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xdfb8', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'7b63916bbf8234aa0173923056a198ea\n'}
-06/25/2024 11:38:04 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:04 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
-06/25/2024 11:38:04 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 2b 6cdb4566-a782-48ff-b0da-f46af285cfb4"
-06/25/2024 11:38:04 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xba8d', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'1d756103d681db696aa699e96fef6636\n'}
-06/25/2024 11:38:04 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:04 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
-06/25/2024 11:38:05 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xc6ca', 'length': 100, 'lengthFull': 115, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test line 3a 9dd482af-e25d-4877-adcf-05dd30cea835\ntest line 3b 4f9ede2a-0ace-403c-86f4-98eb5c9723ae\n'}
-06/25/2024 11:38:05 PM - DEBUG: sendACK: Sending ACK for ID 0
-06/25/2024 11:38:05 PM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "test line 3a 9dd482af-e25d-4877-adcf-05dd30cea835"
-06/25/2024 11:38:05 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x646f', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'a35a437c26a4d98e4eac3e26c0d9821f\n'}
-06/25/2024 11:38:05 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:05 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
-06/25/2024 11:38:05 PM - DEBUG: grading1: Sending MD5 for ID 0 with ID 0. MD5 for: "test line 3b 4f9ede2a-0ace-403c-86f4-98eb5c9723ae"
-06/25/2024 11:38:05 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x8a9f', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'50dedd158f75570ad507b4247869be2e\n'}
-06/25/2024 11:38:05 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:05 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
-06/25/2024 11:38:05 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xd20c', 'length': 100, 'lengthFull': 115, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'test line 4a 88f17d83-f000-4734-9c30-cacfbf286d4f\ntest line 4b ff783627-be5c-4396-9f21-43e6d6c02bc1\n'}
-06/25/2024 11:38:05 PM - DEBUG: sendACK: Sending ACK for ID 1
-06/25/2024 11:38:05 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 1. MD5 for: "test line 4a 88f17d83-f000-4734-9c30-cacfbf286d4f"
-06/25/2024 11:38:05 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xce3b', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'461f630ce10e003546a8624a32663b05\n'}
-06/25/2024 11:38:05 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:05 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
-06/25/2024 11:38:05 PM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 4b ff783627-be5c-4396-9f21-43e6d6c02bc1"
-06/25/2024 11:38:05 PM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x4570', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'3d196921a80e76692501e8f1a399e4e3\n'}
-06/25/2024 11:38:05 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
-06/25/2024 11:38:05 PM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
-06/25/2024 11:38:06 PM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xbef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'END', 'dataRaw': b''}
-06/25/2024 11:38:06 PM - DEBUG: sendACK: Sending ACK for ID 0
-06/25/2024 11:38:06 PM - INFO: grading1: Grading 1 complete. Exiting...
+06/26/2024 12:29:14 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x101d', 'length': 299, 'lengthFull': 314, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'2021031629:4:1bfb00806dfff00860f34f39494a2f6fd1904ed29f9eab7bdf044dca28364e1e+2021031726:4:04ffa8a7b4c42f5c6715514d6b1c90ee8105a85cd328af27ff1edb01ca7124a2+2021096887:4:408100f3ec730df91c5d2493ff1284f7234ec552c9a22e374cdf75cc490463dd+52ba0d0028eae2a34eae7fc3db5f60898de3817245d834976e7d8938aae7d86e\n'}
+06/26/2024 12:29:14 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:14 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
+06/26/2024 12:29:14 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x5420', 'length': 24, 'lengthFull': 39, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'authentication complete\n'}
+06/26/2024 12:29:14 AM - DEBUG: sendACK: Sending ACK for ID 0
+06/26/2024 12:29:14 AM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "authentication complete"
+06/26/2024 12:29:14 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xec43', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'edd3c754e806161fdec0351779931db1\n'}
+06/26/2024 12:29:14 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:14 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
+06/26/2024 12:29:14 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xf206', 'length': 17, 'lengthFull': 32, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'entering phase 1\n'}
+06/26/2024 12:29:14 AM - DEBUG: sendACK: Sending ACK for ID 1
+06/26/2024 12:29:14 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "entering phase 1"
+06/26/2024 12:29:14 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xffd1', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'729913ce41ad801238a23022341f47fd\n'}
+06/26/2024 12:29:14 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:14 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
+06/26/2024 12:29:14 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x2cf8', 'length': 49, 'lengthFull': 64, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test line 0 28786b4e-50bf-48ac-9fed-0788e98ac618\n'}
+06/26/2024 12:29:14 AM - DEBUG: sendACK: Sending ACK for ID 0
+06/26/2024 12:29:14 AM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "test line 0 28786b4e-50bf-48ac-9fed-0788e98ac618"
+06/26/2024 12:29:14 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x94c0', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'24489afe796ba87b08709cd4182c45d0\n'}
+06/26/2024 12:29:15 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:15 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
+06/26/2024 12:29:15 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xce90', 'length': 49, 'lengthFull': 64, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'test line 1 8535d49b-483f-4343-8bfc-d9b9c755bc40\n'}
+06/26/2024 12:29:15 AM - DEBUG: sendACK: Sending ACK for ID 1
+06/26/2024 12:29:15 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 1 8535d49b-483f-4343-8bfc-d9b9c755bc40"
+06/26/2024 12:29:15 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xc999', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'fe9a96e3fc72b806fac9d1a278ac90f6\n'}
+06/26/2024 12:29:15 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:15 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
+06/26/2024 12:29:16 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x5af6', 'length': 49, 'lengthFull': 64, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test line 2 cc493b2f-5c3d-4e9d-b045-dbfa87ac7b1f\n'}
+06/26/2024 12:29:16 AM - DEBUG: sendACK: Sending ACK for ID 0
+06/26/2024 12:29:16 AM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "test line 2 cc493b2f-5c3d-4e9d-b045-dbfa87ac7b1f"
+06/26/2024 12:29:16 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x6359', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'3af37a98f7e8696dbb3a5896a3d43b5d\n'}
+06/26/2024 12:29:16 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:16 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
+06/26/2024 12:29:16 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x40eb', 'length': 49, 'lengthFull': 64, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'test line 3 099eebff-4b21-4681-8de6-e609fc738a34\n'}
+06/26/2024 12:29:16 AM - DEBUG: sendACK: Sending ACK for ID 1
+06/26/2024 12:29:16 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 3 099eebff-4b21-4681-8de6-e609fc738a34"
+06/26/2024 12:29:16 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x208d', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'03ce35c16be485858835fc66d5538529\n'}
+06/26/2024 12:29:16 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:16 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
+06/26/2024 12:29:16 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xa796', 'length': 49, 'lengthFull': 64, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test line 4 36f2f035-4f31-4f18-bc75-8c36ecc3b7d2\n'}
+06/26/2024 12:29:16 AM - DEBUG: sendACK: Sending ACK for ID 0
+06/26/2024 12:29:16 AM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "test line 4 36f2f035-4f31-4f18-bc75-8c36ecc3b7d2"
+06/26/2024 12:29:16 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x6dc2', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'db3551e8c25603ba8f0b662a9b94862f\n'}
+06/26/2024 12:29:16 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:16 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
+06/26/2024 12:29:16 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xeeeb', 'length': 37, 'lengthFull': 52, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'entering phase 2 retransmission test\n'}
+06/26/2024 12:29:16 AM - DEBUG: sendACK: Sending ACK for ID 1
+06/26/2024 12:29:16 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "entering phase 2 retransmission test"
+06/26/2024 12:29:16 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x34f3', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'0e30c4436289108150c5679f4531ff30\n'}
+06/26/2024 12:29:17 AM - WARNING: receiveAndCheckFrame: Timeout expired.
+06/26/2024 12:29:17 AM - WARNING: sendFrameAndWaitForACK: No ACK received (1/16). Retransmitting...
+06/26/2024 12:29:18 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xd6bc', 'length': 65, 'lengthFull': 80, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'second message cannot be answered immediately due to missing ack\n'}
+06/26/2024 12:29:18 AM - DEBUG: sendACK: Sending ACK for ID 0
+06/26/2024 12:29:19 AM - WARNING: receiveAndCheckFrame: Timeout expired.
+06/26/2024 12:29:19 AM - WARNING: sendFrameAndWaitForACK: No ACK received (2/16). Retransmitting...
+06/26/2024 12:29:21 AM - WARNING: receiveAndCheckFrame: Timeout expired.
+06/26/2024 12:29:21 AM - WARNING: sendFrameAndWaitForACK: No ACK received (3/16). Retransmitting...
+06/26/2024 12:29:23 AM - WARNING: receiveAndCheckFrame: Timeout expired.
+06/26/2024 12:29:23 AM - WARNING: sendFrameAndWaitForACK: No ACK received (4/16). Retransmitting...
+06/26/2024 12:29:24 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:24 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
+06/26/2024 12:29:24 AM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "second message cannot be answered immediately due to missing ack"
+06/26/2024 12:29:24 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xc8a0', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'7602a24117f5a631ed03e5732e5f4f6d\n'}
+06/26/2024 12:29:24 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:24 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
+06/26/2024 12:29:25 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xa1b0', 'length': 29, 'lengthFull': 44, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'entering phase 3 resync test\n'}
+06/26/2024 12:29:25 AM - DEBUG: sendACK: Sending ACK for ID 1
+06/26/2024 12:29:25 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "entering phase 3 resync test"
+06/26/2024 12:29:25 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xb9bf', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'44027226ffb8f96b269f2889df8b0194\n'}
+06/26/2024 12:29:25 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:25 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
+06/26/2024 12:29:25 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x4b0b', 'length': 49, 'lengthFull': 64, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test line 0 ba2c180a-7e46-47ab-b132-22b7d220ff69\n'}
+06/26/2024 12:29:25 AM - DEBUG: sendACK: Sending ACK for ID 0
+06/26/2024 12:29:25 AM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "test line 0 ba2c180a-7e46-47ab-b132-22b7d220ff69"
+06/26/2024 12:29:25 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x28d5', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'59406a919dc9be0359c306c110093006\n'}
+06/26/2024 12:29:25 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:25 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
+06/26/2024 12:29:25 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x1829', 'length': 49, 'lengthFull': 64, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'test line 1 6c6b96c5-9f68-4b0f-b2c0-bbf6b2740514\n'}
+06/26/2024 12:29:25 AM - DEBUG: sendACK: Sending ACK for ID 1
+06/26/2024 12:29:25 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 1 6c6b96c5-9f68-4b0f-b2c0-bbf6b2740514"
+06/26/2024 12:29:25 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x516f', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'6d253022aca5c8193686d851e49755b0\n'}
+06/26/2024 12:29:25 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:25 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
+06/26/2024 12:29:25 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xde22', 'length': 49, 'lengthFull': 64, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test line 2 86e0a940-48c6-4701-ad34-893055b355be\n'}
+06/26/2024 12:29:25 AM - DEBUG: sendACK: Sending ACK for ID 0
+06/26/2024 12:29:25 AM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "test line 2 86e0a940-48c6-4701-ad34-893055b355be"
+06/26/2024 12:29:25 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x7099', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'39dbca4244bf4eea6d83cd7330662800\n'}
+06/26/2024 12:29:25 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:25 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
+06/26/2024 12:29:26 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x157e', 'length': 49, 'lengthFull': 64, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'test line 3 5750ae8a-25c1-460f-9b73-839701da8f8f\n'}
+06/26/2024 12:29:26 AM - DEBUG: sendACK: Sending ACK for ID 1
+06/26/2024 12:29:26 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 3 5750ae8a-25c1-460f-9b73-839701da8f8f"
+06/26/2024 12:29:26 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x403f', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'099aae632cbb0042bcec856251bfd9cd\n'}
+06/26/2024 12:29:26 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:26 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
+06/26/2024 12:29:26 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xdd56', 'length': 49, 'lengthFull': 64, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test line 4 9db5099e-908f-4e4d-9454-962b1abdda21\n'}
+06/26/2024 12:29:26 AM - DEBUG: sendACK: Sending ACK for ID 0
+06/26/2024 12:29:26 AM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "test line 4 9db5099e-908f-4e4d-9454-962b1abdda21"
+06/26/2024 12:29:26 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x3324', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'0a17125e730e814eef8ca93f57958d43\n'}
+06/26/2024 12:29:26 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:26 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
+06/26/2024 12:29:26 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x9d49', 'length': 38, 'lengthFull': 53, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'entering phase 4 partial message test\n'}
+06/26/2024 12:29:26 AM - DEBUG: sendACK: Sending ACK for ID 1
+06/26/2024 12:29:26 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "entering phase 4 partial message test"
+06/26/2024 12:29:26 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x44ab', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'0aac0ca0402487bd6c19badd3331367e\n'}
+06/26/2024 12:29:27 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:27 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
+06/26/2024 12:29:27 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x24ed', 'length': 5, 'lengthFull': 20, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test '}
+06/26/2024 12:29:27 AM - DEBUG: sendACK: Sending ACK for ID 0
+06/26/2024 12:29:27 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xcedb', 'length': 44, 'lengthFull': 59, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'line 0 c7f68797-6394-4ad9-a757-ffabdbbdc619\n'}
+06/26/2024 12:29:27 AM - DEBUG: sendACK: Sending ACK for ID 1
+06/26/2024 12:29:27 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 1. MD5 for: "test line 0 c7f68797-6394-4ad9-a757-ffabdbbdc619"
+06/26/2024 12:29:27 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xc8d1', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'3b69a6093acb274c37035ae54394e331\n'}
+06/26/2024 12:29:27 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:27 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
+06/26/2024 12:29:27 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x24ed', 'length': 5, 'lengthFull': 20, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test '}
+06/26/2024 12:29:27 AM - DEBUG: sendACK: Sending ACK for ID 0
+06/26/2024 12:29:27 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xc48f', 'length': 44, 'lengthFull': 59, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'line 1 4c25be81-9e59-4a38-a7e0-8c1fab583531\n'}
+06/26/2024 12:29:27 AM - DEBUG: sendACK: Sending ACK for ID 1
+06/26/2024 12:29:27 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 1 4c25be81-9e59-4a38-a7e0-8c1fab583531"
+06/26/2024 12:29:27 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x76cd', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'ac13756e33ca119fe56e21911fc2044a\n'}
+06/26/2024 12:29:27 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:27 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
+06/26/2024 12:29:27 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x24ed', 'length': 5, 'lengthFull': 20, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test '}
+06/26/2024 12:29:27 AM - DEBUG: sendACK: Sending ACK for ID 0
+06/26/2024 12:29:27 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x97a3', 'length': 44, 'lengthFull': 59, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'line 2 3dacc3d2-83c5-407c-a126-2b48d35b9c01\n'}
+06/26/2024 12:29:27 AM - DEBUG: sendACK: Sending ACK for ID 1
+06/26/2024 12:29:27 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 1. MD5 for: "test line 2 3dacc3d2-83c5-407c-a126-2b48d35b9c01"
+06/26/2024 12:29:27 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xf938', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'06326dd6b6e36af2428316d7cb88a34d\n'}
+06/26/2024 12:29:27 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:27 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
+06/26/2024 12:29:28 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x24ed', 'length': 5, 'lengthFull': 20, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test '}
+06/26/2024 12:29:28 AM - DEBUG: sendACK: Sending ACK for ID 0
+06/26/2024 12:29:28 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x897', 'length': 44, 'lengthFull': 59, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'line 3 ae74fea8-07cf-4fab-a110-dcaf94343058\n'}
+06/26/2024 12:29:28 AM - DEBUG: sendACK: Sending ACK for ID 1
+06/26/2024 12:29:28 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 3 ae74fea8-07cf-4fab-a110-dcaf94343058"
+06/26/2024 12:29:28 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x66c8', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'2c157c1b59d7c8ca40bc992a86613a69\n'}
+06/26/2024 12:29:28 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:28 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
+06/26/2024 12:29:28 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x24ed', 'length': 5, 'lengthFull': 20, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test '}
+06/26/2024 12:29:28 AM - DEBUG: sendACK: Sending ACK for ID 0
+06/26/2024 12:29:28 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xfbb9', 'length': 44, 'lengthFull': 59, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'line 4 2c91af97-66b0-4800-abff-c7e287dee77e\n'}
+06/26/2024 12:29:28 AM - DEBUG: sendACK: Sending ACK for ID 1
+06/26/2024 12:29:28 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 1. MD5 for: "test line 4 2c91af97-66b0-4800-abff-c7e287dee77e"
+06/26/2024 12:29:28 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x2830', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'e56c69147c8ee07607c7a2a4f0e58056\n'}
+06/26/2024 12:29:28 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:28 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
+06/26/2024 12:29:28 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xe382', 'length': 39, 'lengthFull': 54, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'entering phase 5 multiple message test\n'}
+06/26/2024 12:29:28 AM - DEBUG: sendACK: Sending ACK for ID 0
+06/26/2024 12:29:28 AM - DEBUG: grading1: Sending MD5 for ID 0 with ID 0. MD5 for: "entering phase 5 multiple message test"
+06/26/2024 12:29:28 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x80ca', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'5bb1e93bf3212e3a901823eb2b92305a\n'}
+06/26/2024 12:29:28 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:28 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
+06/26/2024 12:29:28 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xf343', 'length': 100, 'lengthFull': 115, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'test line 0a ed4ee0b4-072b-4de1-b4cc-0c0f1a8966c4\ntest line 0b eb182095-24a8-4a11-bde9-c984eeeb7769\n'}
+06/26/2024 12:29:28 AM - DEBUG: sendACK: Sending ACK for ID 1
+06/26/2024 12:29:28 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 1. MD5 for: "test line 0a ed4ee0b4-072b-4de1-b4cc-0c0f1a8966c4"
+06/26/2024 12:29:28 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xcb35', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'66db7189bcd35162d3c63ed84703aa7c\n'}
+06/26/2024 12:29:28 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:28 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
+06/26/2024 12:29:28 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 0b eb182095-24a8-4a11-bde9-c984eeeb7769"
+06/26/2024 12:29:28 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x431d', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'4d6c2a8cf62c7c51932a4796aa504836\n'}
+06/26/2024 12:29:28 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:28 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
+06/26/2024 12:29:28 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xe67e', 'length': 100, 'lengthFull': 115, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test line 1a 1f8e8825-f792-4759-b586-698e6cda44da\ntest line 1b c7268163-1783-4700-9af3-1d83fcbbb31c\n'}
+06/26/2024 12:29:28 AM - DEBUG: sendACK: Sending ACK for ID 0
+06/26/2024 12:29:28 AM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "test line 1a 1f8e8825-f792-4759-b586-698e6cda44da"
+06/26/2024 12:29:28 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x9889', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'73cac577108d55effa21c5978a98163f\n'}
+06/26/2024 12:29:28 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:28 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
+06/26/2024 12:29:28 AM - DEBUG: grading1: Sending MD5 for ID 0 with ID 0. MD5 for: "test line 1b c7268163-1783-4700-9af3-1d83fcbbb31c"
+06/26/2024 12:29:28 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x5930', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'1f6f1e58af9074ae3025374a0639686f\n'}
+06/26/2024 12:29:28 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:28 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
+06/26/2024 12:29:29 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xbbba', 'length': 100, 'lengthFull': 115, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'test line 2a 8a72447b-54df-4a14-bee2-e6a477d6a4d5\ntest line 2b a6aae398-f8e9-4e71-930c-7b93b786bf08\n'}
+06/26/2024 12:29:29 AM - DEBUG: sendACK: Sending ACK for ID 1
+06/26/2024 12:29:29 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 1. MD5 for: "test line 2a 8a72447b-54df-4a14-bee2-e6a477d6a4d5"
+06/26/2024 12:29:29 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x5a0c', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'452aa539e5afc4dd9a29af7f97d556aa\n'}
+06/26/2024 12:29:29 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:29 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
+06/26/2024 12:29:29 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 2b a6aae398-f8e9-4e71-930c-7b93b786bf08"
+06/26/2024 12:29:29 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xf994', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'932d0a8508b87d46c47eb1a0c6429593\n'}
+06/26/2024 12:29:29 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:29 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
+06/26/2024 12:29:29 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x6872', 'length': 100, 'lengthFull': 115, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'test line 3a a3348590-584a-4f13-a65c-523306b6b998\ntest line 3b b9073edd-83e4-4913-8cbd-ac905b373064\n'}
+06/26/2024 12:29:29 AM - DEBUG: sendACK: Sending ACK for ID 0
+06/26/2024 12:29:29 AM - DEBUG: grading1: Sending MD5 for ID 0 with ID 1. MD5 for: "test line 3a a3348590-584a-4f13-a65c-523306b6b998"
+06/26/2024 12:29:29 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0xe45e', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'58669432b5c9cb39765c96f8ce773da2\n'}
+06/26/2024 12:29:30 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:30 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
+06/26/2024 12:29:30 AM - DEBUG: grading1: Sending MD5 for ID 0 with ID 0. MD5 for: "test line 3b b9073edd-83e4-4913-8cbd-ac905b373064"
+06/26/2024 12:29:30 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x8d3e', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'79aa9cf21fb3a4e66795c52cb6370f3d\n'}
+06/26/2024 12:29:30 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:30 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
+06/26/2024 12:29:30 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x19f3', 'length': 100, 'lengthFull': 115, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'test line 4a 44ecf9d8-47f2-41d1-bf57-e041825b30b6\ntest line 4b 89a6385e-aa77-417f-b8f9-b11d535248dc\n'}
+06/26/2024 12:29:30 AM - DEBUG: sendACK: Sending ACK for ID 1
+06/26/2024 12:29:30 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 1. MD5 for: "test line 4a 44ecf9d8-47f2-41d1-bf57-e041825b30b6"
+06/26/2024 12:29:30 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x4da', 'length': 33, 'lengthFull': 48, 'id': 1, 'flag': 'EMPTY', 'dataRaw': b'7aa6283d1bee0fc8965f24e1261a0c1c\n'}
+06/26/2024 12:29:30 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef8', 'length': 0, 'lengthFull': 15, 'id': 1, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:30 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 1
+06/26/2024 12:29:30 AM - DEBUG: grading1: Sending MD5 for ID 1 with ID 0. MD5 for: "test line 4b 89a6385e-aa77-417f-b8f9-b11d535248dc"
+06/26/2024 12:29:30 AM - DEBUG: sendFrameAndWaitForACK: Sending frame: {'checksumHex': '0x63cd', 'length': 33, 'lengthFull': 48, 'id': 0, 'flag': 'EMPTY', 'dataRaw': b'580023fa480a306d851df5cf984e0fd7\n'}
+06/26/2024 12:29:30 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0x7ef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'ACK', 'dataRaw': b''}
+06/26/2024 12:29:30 AM - DEBUG: sendFrameAndWaitForACK: Received ACK for ID 0
+06/26/2024 12:29:30 AM - DEBUG: receiveAndCheckFrame: Received valid frame: {'checksumHex': '0xbef9', 'length': 0, 'lengthFull': 15, 'id': 0, 'flag': 'END', 'dataRaw': b''}
+06/26/2024 12:29:30 AM - DEBUG: sendACK: Sending ACK for ID 0
+06/26/2024 12:29:30 AM - INFO: grading1: Grading 1 complete. Exiting...

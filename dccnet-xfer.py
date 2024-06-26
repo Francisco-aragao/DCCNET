@@ -66,30 +66,15 @@ def initServerConnection(port: int) -> socket.socket:
     """
 
     # This will try to listen on IPv4 and IPv6 addresses
-    # The first socket to get a successful connection is returned
-    # Note: using TCP protocol for DCCNET
-    for res in socket.getaddrinfo(None, port, type=socket.SOCK_STREAM, proto=socket.IPPROTO_TCP, flags=socket.AI_PASSIVE):
-        af, socktype, proto, canonname, sa = res
-
-        try:
-            sock = socket.socket(af, socktype, proto)
-        except OSError as msg:
-            logging.warning(f"Attempt at creating socket failed. {msg}")
-
-            sock = None
-            continue
-        try:
-            sock.bind(sa)
-            sock.listen(1)                       
-        except OSError as msg:
-            logging.warning(f"Attempt at binding socket to {sa} failed. {msg}")
-
-            sock.close()
-            sock = None
-            continue
-        break
-
-    if sock is None:
+    # Note 1: only works for TCP
+    # Note 2: "" means all interfaces
+    try:
+        if socket.has_dualstack_ipv6():
+            sock = socket.create_server(("", port), family=socket.AF_INET6, dualstack_ipv6=True)
+        else:
+            sock = socket.create_server(("", port))
+    except OSError as msg:
+        logging.error(f"Attempt at creating and binding socket failed. {msg}")
         logging.error("Could not open a valid socket")
         exit(1)
 
