@@ -225,7 +225,7 @@ def sendACK(sock: socket.socket, id: int):
 def receiveAndCheckFrame(sock: socket.socket, skipDataQueue: bool = False) -> dict[str, Any] | None:
     # Check for queued frames
     if not skipDataQueue and len(dccnet.receivedDataQueue) > 0:
-        return dccnet.receivedDataQueue.pop()
+        return dccnet.receivedDataQueue.pop(0)
 
     # Prepare to receive frame
     sock.settimeout(TIMEOUT_SEC)
