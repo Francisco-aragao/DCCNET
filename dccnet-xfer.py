@@ -70,9 +70,9 @@ def initServerConnection(port: int) -> socket.socket:
     # Note 2: "" means all interfaces
     try:
         if socket.has_dualstack_ipv6():
-            sock = socket.create_server(("", port), family=socket.AF_INET6, dualstack_ipv6=True)
+            sock = socket.create_server(("", port), backlog=1, family=socket.AF_INET6, dualstack_ipv6=True)
         else:
-            sock = socket.create_server(("", port))
+            sock = socket.create_server(("", port), backlog=1)
     except OSError as msg:
         logging.error(f"Attempt at creating and binding socket failed. {msg}")
         logging.error("Could not open a valid socket")
