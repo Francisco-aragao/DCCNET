@@ -46,9 +46,6 @@ def grading1(sock: socket.socket, gas: str):
         frame: dict[str, Any] | None = receiveAndCheckFrame(sock)
 
         if frame is not None:
-            # Send ACK for received frame
-            sendACK(sock, frame['id'])
-
             # Grading finished, no need to send MD5
             if frame['flag'] == "END":
                 logging.info("grading1: Grading 1 complete. Exiting...")

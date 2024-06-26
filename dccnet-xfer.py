@@ -95,64 +95,7 @@ def initServerConnection(port: int) -> socket.socket:
 
     return sock
 
-def serverExchangeFile(sock: socket.socket, inputFile, outputFile):
-    # Stop conditions
-    finishedSending: bool = False
-    finishedReceiving: bool = False
-
-    maxConsecutiveInvalidFrames: int = MIN_RETRANSMISSIONS_RETRIES
-
-    # Wait for connection
-    conn, addr = sock.accept()
-
-    with conn:
-        logging.info(f"Connected by {addr}")
-
-        while not finishedReceiving or not finishedSending:
-            # Client starts sending frame
-            if not finishedReceiving:
-                frame: dict[str, Any] | None = receiveAndCheckFrame(conn)
-
-                if frame is None:
-                    if maxConsecutiveInvalidFrames == 0:
-                        logging.error(f"serverExchangeFile: Too many consecutive invalid frames received. Aborting...")
-                        sendRSTAndAbort(conn)
-
-                    logging.warning(f"serverExchangeFile: Received invalid frame. Skipping...")
-
-                    maxConsecutiveInvalidFrames -= 1
-                    continue
-                else:
-                    maxConsecutiveInvalidFrames = MIN_RETRANSMISSIONS_RETRIES
-
-                # Received data frame, write to file
-                outputFile.write(frame['dataRaw'])
-
-                # Send ACK for received frame
-                sendACK(conn, frame['id'])
-
-                # Received END frame, file is complete (we may continue sending data)
-                if frame['flag'] == "END":
-                    finishedReceiving = True
-                    continue
-
-            # Send our frame
-            if not finishedSending:
-                chunk: bytes = inputFile.read(MAX_PAYLOAD_SIZE)
-
-                if not chunk:
-                    # We finished sending, send END to client (we may continue receiving)
-                    finishedSending = True
-
-                    frame: bytes = buildFrame(dccnet.currTransmitID, FLAG_END_HEX)
-                    sendFrameAndWaitForACK(conn, frame)
-                    continue
-
-                # Valid file data, send to client
-                frame: bytes = buildFrame(dccnet.currTransmitID, FLAG_EMPTY_HEX, chunk)
-                sendFrameAndWaitForACK(conn, frame)
-
-def clientExchangeFile(sock: socket.socket, inputFile, outputFile):
+def exchangeFile(sock: socket.socket, inputFile, outputFile):
     # Stop conditions
     finishedSending: bool = False
     finishedReceiving: bool = False
@@ -160,7 +103,37 @@ def clientExchangeFile(sock: socket.socket, inputFile, outputFile):
     maxConsecutiveInvalidFrames: int = MIN_RETRANSMISSIONS_RETRIES
 
     while not finishedReceiving or not finishedSending:
-        # We start sending frame
+        # Client starts sending frame
+        if not finishedReceiving:
+            frame: dict[str, Any] | None = receiveAndCheckFrame(sock)
+
+            # Client did not send chunk or corrupted
+            if frame is None:
+                # We finished sending so we MUST receive something
+                if finishedSending:
+                    if maxConsecutiveInvalidFrames == 0:
+                        logging.error(f"exchangeFile: Too many consecutive invalid or no frames received. Aborting...")
+                        sendRSTAndAbort(sock)
+
+                    attemptNum: int = MIN_RETRANSMISSIONS_RETRIES - maxConsecutiveInvalidFrames + 1
+                    logging.warning(f"exchangeFile: Invalid or no frame received ({attemptNum}/{MIN_RETRANSMISSIONS_RETRIES}).")
+
+                    maxConsecutiveInvalidFrames -= 1
+                    continue
+            else:
+                # Valid chunk, so reset counter
+                maxConsecutiveInvalidFrames = MIN_RETRANSMISSIONS_RETRIES
+
+                # Received data frame, write to file
+                outputFile.write(frame['dataRaw'])
+
+                # Received END frame, file is complete (we may continue sending data)
+                if frame['flag'] == "END":
+                    logging.info("exchangeFile: Finished receiving file.")
+                    finishedReceiving = True
+                    continue
+
+        # Send our frame
         if not finishedSending:
             chunk: bytes = inputFile.read(MAX_PAYLOAD_SIZE)
 
@@ -170,37 +143,14 @@ def clientExchangeFile(sock: socket.socket, inputFile, outputFile):
 
                 frame: bytes = buildFrame(dccnet.currTransmitID, FLAG_END_HEX)
                 sendFrameAndWaitForACK(sock, frame)
+                logging.info("exchangeFile: Finished sending file.")
                 continue
 
             # Valid file data, send to client
             frame: bytes = buildFrame(dccnet.currTransmitID, FLAG_EMPTY_HEX, chunk)
             sendFrameAndWaitForACK(sock, frame)
 
-        if not finishedReceiving:
-            frame: dict[str, Any] | None = receiveAndCheckFrame(sock)
-
-            if frame is None:
-                if maxConsecutiveInvalidFrames == 0:
-                    logging.error(f"serverExchangeFile: Too many consecutive invalid frames received. Aborting...")
-                    sendRSTAndAbort(sock)
-
-                logging.warning(f"serverExchangeFile: Received invalid frame. Skipping...")
-
-                maxConsecutiveInvalidFrames -= 1
-                continue
-            else:
-                maxConsecutiveInvalidFrames = MIN_RETRANSMISSIONS_RETRIES
-
-            # Received data frame, write to file
-            outputFile.write(frame['dataRaw'])
-
-            # Send ACK for received frame
-            sendACK(sock, frame['id'])
-
-            # Received END frame, file is complete (we may continue sending data)
-            if frame['flag'] == "END":
-                finishedReceiving = True
-                continue
+    logging.info("exchangeFile: File transfer complete.")
 
 if __name__ == "__main__":
     parser = initParser()
@@ -221,13 +171,20 @@ if __name__ == "__main__":
         filemode="w",
         encoding="utf-8",
     )
-
+    
+    # SERVER OPERATION
     if args.hostport == None: # -s
         sock: socket.socket = initServerConnection(int(args.port))
 
         # Init file transfer
         with open(args.input, 'rb') as inputFile, open(args.output, 'wb') as outputFile:
-            serverExchangeFile(sock, inputFile, outputFile)
+            # Wait for connection
+            conn, addr = sock.accept()
+
+            with conn:
+                logging.info(f"Connected by {addr}")
+                exchangeFile(conn, inputFile, outputFile)
+    # CLIENT OPERATION
     else:
         # Find host and port in such a way that IPv6 addresses are supported
         sepIdx: int = args.hostport.rfind(':')
@@ -239,6 +196,6 @@ if __name__ == "__main__":
 
         # Init file transfer
         with open(args.input, 'rb') as inputFile, open(args.output, 'wb') as outputFile:
-            clientExchangeFile(sock, inputFile, outputFile)
+            exchangeFile(sock, inputFile, outputFile)
 
     sock.close()
