@@ -6,6 +6,7 @@ from typing import Any
 
 from dccnetcommon import *
 
+
 def initParser() -> argparse.ArgumentParser:
     """
     Initialize the argument parser.
@@ -23,7 +24,6 @@ def initParser() -> argparse.ArgumentParser:
         help="Server port to listen to.",
     )
 
-
     parser.add_argument(
         "-c",
         "--hostport",
@@ -31,7 +31,6 @@ def initParser() -> argparse.ArgumentParser:
         type=str,
         help="Server host and port in the format <host>:<port>.",
     )
-
 
     parser.add_argument(
         "input",
@@ -48,6 +47,7 @@ def initParser() -> argparse.ArgumentParser:
     )
 
     return parser
+
 
 # Adapted from: https://docs.python.org/3/library/socket.html#creating-sockets
 def initServerConnection(port: int) -> socket.socket:
@@ -80,6 +80,7 @@ def initServerConnection(port: int) -> socket.socket:
 
     return sock
 
+
 def exchangeFile(sock: socket.socket, inputFile, outputFile):
     # Stop conditions
     finishedSending: bool = False
@@ -97,11 +98,17 @@ def exchangeFile(sock: socket.socket, inputFile, outputFile):
                 # We finished sending so we MUST receive something
                 if finishedSending:
                     if maxConsecutiveInvalidFrames == 0:
-                        logging.error(f"exchangeFile: Too many consecutive invalid or no frames received. Aborting...")
+                        logging.error(
+                            f"exchangeFile: Too many consecutive invalid or no frames received. Aborting..."
+                        )
                         sendRSTAndAbort(sock)
 
-                    attemptNum: int = MIN_RETRANSMISSIONS_RETRIES - maxConsecutiveInvalidFrames + 1
-                    logging.warning(f"exchangeFile: Invalid or no frame received ({attemptNum}/{MIN_RETRANSMISSIONS_RETRIES}).")
+                    attemptNum: int = (
+                        MIN_RETRANSMISSIONS_RETRIES - maxConsecutiveInvalidFrames + 1
+                    )
+                    logging.warning(
+                        f"exchangeFile: Invalid or no frame received ({attemptNum}/{MIN_RETRANSMISSIONS_RETRIES})."
+                    )
 
                     maxConsecutiveInvalidFrames -= 1
                     continue
@@ -110,10 +117,10 @@ def exchangeFile(sock: socket.socket, inputFile, outputFile):
                 maxConsecutiveInvalidFrames = MIN_RETRANSMISSIONS_RETRIES
 
                 # Received data frame, write to file
-                outputFile.write(frame['dataRaw'])
+                outputFile.write(frame["dataRaw"])
 
                 # Received END frame, file is complete (we may continue sending data)
-                if frame['flag'] == "END":
+                if frame["flag"] == "END":
                     logging.info("exchangeFile: Finished receiving file.")
                     finishedReceiving = True
                     continue
@@ -137,6 +144,7 @@ def exchangeFile(sock: socket.socket, inputFile, outputFile):
 
     logging.info("exchangeFile: File transfer complete.")
 
+
 if __name__ == "__main__":
     parser = initParser()
     args = parser.parse_args()
@@ -156,13 +164,13 @@ if __name__ == "__main__":
         filemode="w",
         encoding="utf-8",
     )
-    
+
     # SERVER OPERATION
-    if args.hostport == None: # -s
+    if args.hostport == None:  # -s
         sock: socket.socket = initServerConnection(int(args.port))
 
         # Init file transfer
-        with open(args.input, 'rb') as inputFile, open(args.output, 'wb') as outputFile:
+        with open(args.input, "rb") as inputFile, open(args.output, "wb") as outputFile:
             # Wait for connection
             conn, addr = sock.accept()
 
@@ -172,15 +180,15 @@ if __name__ == "__main__":
     # CLIENT OPERATION
     else:
         # Find host and port in such a way that IPv6 addresses are supported
-        sepIdx: int = args.hostport.rfind(':')
+        sepIdx: int = args.hostport.rfind(":")
 
         host: str = args.hostport[:sepIdx]
-        port: int = int(args.hostport[sepIdx+1:])
+        port: int = int(args.hostport[sepIdx + 1 :])
 
         sock: socket.socket = initClientConnection(host, port)
 
         # Init file transfer
-        with open(args.input, 'rb') as inputFile, open(args.output, 'wb') as outputFile:
+        with open(args.input, "rb") as inputFile, open(args.output, "wb") as outputFile:
             exchangeFile(sock, inputFile, outputFile)
 
     sock.close()
